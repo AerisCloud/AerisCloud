@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting Started &mdash; AerisCloud 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="AerisCloud 1.4.0 documentation" href="../index.html" />
+    <link rel="next" title="Aeris Command" href="../commands/aeris.html" />
+    <link rel="prev" title="Rsync Mode" href="../features/rsync.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>As a Server Operator your main job is to take a project and build the
+infrastructure, configuration to deploy it quickly and efficiently to
+production. Most of the operations a server operator will run are done
+with the <a class="reference internal" href="../commands/cloud.html"><em>Cloud Command</em></a>.</p>
+<div class="section" id="managing-roles-and-playbooks">
+<h2>Managing Roles and Playbooks<a class="headerlink" href="#managing-roles-and-playbooks" title="Permalink to this headline">¶</a></h2>
+<p>This is a quick recap of what was already said in the <a class="reference internal" href="../getting-started.html"><em>Getting Started</em></a>
+documentation. Your roles and playbooks are stored in what we call
+<code class="docutils literal"><span class="pre">organizations</span></code>, those are git repositories unique per client/companies
+you are working with and allows for easy management of private ansible roles.</p>
+<p>If you didn&#8217;t create an organization yet, a brand new organization can be
+created by running the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>cloud organization init my-org
+</pre></div>
+</div>
+<p>You should be moved inside the organization&#8217;s folder and be ready to modify it
+for your needs, see <a class="reference internal" href="../organization.html"><em>Organization</em></a> for more details.</p>
+</div>
+<div class="section" id="taking-inventory">
+<h2>Taking Inventory<a class="headerlink" href="#taking-inventory" title="Permalink to this headline">¶</a></h2>
+<p>If your company already has an inventory, installing it is as simple as running:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>cloud inventory install git@github.com:my-org/inventory.git
+</pre></div>
+</div>
+<p>Any valid git repository will do. Updating all your inventories can be done by
+running <a class="reference internal" href="../commands/cloud.html#cloud-inventory-install"><span>cloud inventory install</span></a> without any repository.</p>
+<div class="section" id="creating-a-new-inventory">
+<h3>Creating a new inventory<a class="headerlink" href="#creating-a-new-inventory" title="Permalink to this headline">¶</a></h3>
+<p>The first step with getting ready for production is to create an ansible
+inventory that can be used with the <a class="reference internal" href="../commands/cloud.html"><em>Cloud Command</em></a>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Move to the inventory folder</span>
+cloud inventory goto
+<span class="c1"># Create a new folder for your inventory</span>
+mkdir my-org
+<span class="c1"># Then edit your inventory file</span>
+mkdir my-org/projectA
+<span class="nv">$EDITOR</span> my-org/projectA/staging
+</pre></div>
+</div>
+<p>Inventories are just standard ansible inventories, you can find more about
+then in the ansible documentation about <a class="reference external" href="http://docs.ansible.com/intro_inventory.html">Inventory</a>.</p>
+<p>A simple inventory that would work with the <a class="reference external" href="https://github.com/AerisCloud/sample-organization">sample organization</a>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Project A</span>
+<span class="c1">## Install the nodejs service on those servers</span>
+<span class="o">[</span>nodejs:children<span class="o">]</span>
+nodejs.host.org
+
+<span class="o">[</span>nodejs.host.org<span class="o">]</span>
+nodejs1.host.org <span class="nv">ansible_ssh_host</span><span class="o">=</span>172.16.0.1
+nodejs2.host.org <span class="nv">ansible_ssh_host</span><span class="o">=</span>172.16.0.2
+nodejs3.host.org <span class="nv">ansible_ssh_host</span><span class="o">=</span>172.16.0.3
+
+<span class="o">[</span>nodejs:vars<span class="o">]</span>
+<span class="nv">node_version</span> <span class="o">=</span> 0.12.6
+
+<span class="c1">## Install the mongodb service on those servers</span>
+<span class="o">[</span>mongodb:children<span class="o">]</span>
+mongodb.host.org
+
+<span class="o">[</span>mongodb.host.org<span class="o">]</span>
+mongodb1.host.org <span class="nv">ansible_ssh_host</span><span class="o">=</span>172.16.1.1
+mongodb2.host.org <span class="nv">ansible_ssh_host</span><span class="o">=</span>172.16.1.2
+
+<span class="o">[</span>mongodb:vars<span class="o">]</span>
+<span class="c1"># Store data on EBS drives</span>
+<span class="nv">mongodb_data_path</span> <span class="o">=</span> /data/mongodb
+</pre></div>
+</div>
+<p>Of course that inventory is missing disk setup (using the <code class="docutils literal"><span class="pre">aeriscloud.disk</span></code>)
+and a proper gateway/load balancer but you should get the gist of it.</p>
+<p>If the <code class="docutils literal"><span class="pre">:vars</span></code> section becomes too large, you can create a <code class="docutils literal"><span class="pre">group_vars</span></code>
+folder next to your inventory and implement what is described in the ansible
+documentation about <a class="reference external" href="http://docs.ansible.com/intro_inventory.html#splitting-out-host-and-group-specific-data">Splitting Out Host and Group Specific Data</a>.</p>
+</div>
+</div>
+<div class="section" id="provisioning">
+<h2>Provisioning<a class="headerlink" href="#provisioning" title="Permalink to this headline">¶</a></h2>
+<p>Once your inventory, playbooks and roles are in tip-top shape, and your project
+is working, comes the time to provision your production or staging servers. For
+that the <a class="reference internal" href="../commands/cloud.html#cloud-provision"><span>cloud provision</span></a> command should be used, like so:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Use the production playbook and provision only nodejs on the staging inventory</span>
+cloud provision my-org/production my-org/projectA/staging --limit<span class="o">=</span><span class="s2">&quot;nodejs&quot;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">--limit</span></code> flag is very useful if you need to provision only part of your
+infrastructure or need to do it step by step (like first start with the DB, then
+the app, etc...).</p>
+</div>
+<div class="section" id="jobs">
+<h2>Jobs<a class="headerlink" href="#jobs" title="Permalink to this headline">¶</a></h2>
+<p>Jobs in AerisCloud are ultra-light playbooks that specialize in running small
+commands, ranging from dumping a database to managing the release process of a
+project.</p>
+<p>They are executed by running the <a class="reference internal" href="../commands/cloud.html#cloud-job"><span>cloud job</span></a> command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>cloud job <span class="o">[</span>JOB<span class="o">]</span> <span class="o">[</span>INVENTORY FILE<span class="o">]</span> <span class="o">[</span>EXTRA PARAMETERS<span class="o">]</span>
+</pre></div>
+</div>
+<p>Running the command with no argument will yield the list of jobs currently
+available in your roles. Running the command with a job but no inventory
+specified will then yield the help for that job.</p>
+<p>The <code class="docutils literal"><span class="pre">[EXTRA</span> <span class="pre">PARAMETERS]</span></code> are passed to ansible directly, always make sure
+to at least use the <code class="docutils literal"><span class="pre">--limit</span></code> option so that your job is not run on your
+whole inventory.</p>
+<div class="section" id="creating-jobs">
+<h3>Creating Jobs<a class="headerlink" href="#creating-jobs" title="Permalink to this headline">¶</a></h3>
+<p>Jobs can be created by adding a <code class="docutils literal"><span class="pre">jobs</span></code> folder in a role&#8217;s folder, for
+example creating the <code class="docutils literal"><span class="pre">my-org/mongodb/jobs/backup.yml</span></code> file will make the
+<code class="docutils literal"><span class="pre">my-org/mongodb/backup</span></code> job available to use with the command.</p>
+<p>Documentation for the job is simply written as a large comment at the top
+of the file.</p>
+<p>Example job:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Quick description</span>
+
+<span class="c1"># Longer description, should describe available variables</span>
+<span class="c1"># and ansible command-line flags that the user can pass to</span>
+<span class="c1"># the job</span>
+
+- hosts: localhost
+  connection: <span class="nb">local</span>
+  gather_facts: <span class="nb">false</span>
+  tasks:
+    - name: <span class="s2">&quot;do something&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/aeriscloud.svg" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started</a><ul>
+<li><a class="reference internal" href="#managing-roles-and-playbooks">Managing Roles and Playbooks</a></li>
+<li><a class="reference internal" href="#taking-inventory">Taking Inventory</a><ul>
+<li><a class="reference internal" href="#creating-a-new-inventory">Creating a new inventory</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#provisioning">Provisioning</a></li>
+<li><a class="reference internal" href="#jobs">Jobs</a><ul>
+<li><a class="reference internal" href="#creating-jobs">Creating Jobs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../features/rsync.html" title="previous chapter">Rsync Mode</a></li>
+      <li>Next: <a href="../commands/aeris.html" title="next chapter">Aeris Command</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/server-operators/getting-started.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Wizcorp Inc.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/server-operators/getting-started.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

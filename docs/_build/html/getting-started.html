@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting Started &mdash; AerisCloud 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="AerisCloud 1.4.0 documentation" href="index.html" />
+    <link rel="next" title=".aeriscloud.yml" href="configuration/aeriscloud.yml.html" />
+    <link rel="prev" title="AerisCloud" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>This guide will step you through installing AerisCloud on your computer, then
+starting a new project.</p>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>A UNIX-based operating systems, OSX and Linux are both supported</li>
+<li>Python 2.7</li>
+<li>python-virtualenv</li>
+<li>Virtualbox</li>
+<li>Vagrant 1.7+</li>
+<li>git</li>
+<li>rsync</li>
+</ul>
+<p>When using Linux, also make sure to have the a working NFS server installed.</p>
+</div>
+<div class="section" id="manual-installation">
+<h2>Manual Installation<a class="headerlink" href="#manual-installation" title="Permalink to this headline">¶</a></h2>
+<p>If you already have all the dependencies installed, the first step is to clone
+the AerisCloud repository where you want it to be installed (something like
+<code class="docutils literal"><span class="pre">/opt/aeriscloud</span></code> is a good idea):</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>git clone https://github.com/aeriscloud/aeriscloud.git
+cd aeriscloud
+</pre></div>
+</div>
+<p>Then run <code class="docutils literal"><span class="pre">make</span> <span class="pre">install</span></code> to install all the necessary python dependencies in the
+current folder and generate the auto-completion.</p>
+<p>Finally add the following line in you <code class="docutils literal"><span class="pre">~/.bash_profile</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">aeriscloud</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">env</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>When updating, just enter the AerisCloud folder, then just pull the latest
+version before running <code class="docutils literal"><span class="pre">make</span></code>.</p>
+</div>
+<div class="section" id="setting-up-aeriscloud">
+<h2>Setting up AerisCloud<a class="headerlink" href="#setting-up-aeriscloud" title="Permalink to this headline">¶</a></h2>
+<p>Once AerisCloud is installed, the first step is to create a new organization.
+Organizations are AerisCloud&#8217;s way to store your custom playbooks, roles and
+anything that might be private to your company, to do so run:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>cloud organization init my-org
+</pre></div>
+</div>
+<p>If it is your first time launching an AerisCloud command, you should be greeted
+by a short assistant to set the global configuration of the tool. Just answer
+each step as they are presented to you and if you do not know the answer/right
+configuration at that time, feel free to skip that step as you can always make
+changes later.</p>
+<p>You terminal will then be moved to the folder containing <code class="docutils literal"><span class="pre">my-org</span></code>, where the
+structure of files should look like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>├── README.md
+├── env_dev.yml
+├── env_production.yml
+└── roles
+    ├── aeriscloud.disk
+    ├── aeriscloud.dotdeb
+    ├── aeriscloud.elasticsearch
+    ├── ... more roles
+    └── dependencies.txt
+</pre></div>
+</div>
+<p>The default generated organization should have several general purpose ansible
+roles already installed to allow you to start hacking as soon as possible, but if
+anything is missing then <code class="docutils literal"><span class="pre">dependencies.txt</span></code> and <code class="docutils literal"><span class="pre">env_production.yml</span></code> are the
+two files to take a look at, more on that in <a class="reference internal" href="organization.html"><em>Organization</em></a>.</p>
+<p>You are now ready to start using AerisCloud. For more details on the available
+configuration options provided by the tool, just jump to <a class="reference internal" href="configuration/index.html"><em>Configuration</em></a>.</p>
+</div>
+<div class="section" id="starting-a-new-project">
+<h2>Starting a New Project<a class="headerlink" href="#starting-a-new-project" title="Permalink to this headline">¶</a></h2>
+<p>Now that everything is up and ready, it is time to start a new project, type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>aeris init my-project --up
+</pre></div>
+</div>
+<p>A short assistant will ask for your project name, services you wish to enable
+and vagrant basebox, the default <code class="docutils literal"><span class="pre">chef/centos-7.0</span></code> basebox should be a safe
+starting box but feel free to use your favorite box from Atlas. Just keep in
+mind that <a class="reference external" href="https://github.com/AerisCloud">AerisCloud roles</a> are mainly
+designed around CentOS and might not work on other distributions.</p>
+<p>The box should start booting up right after that and the provisioning should
+start. It will take some time for the provisioning to finish the first time so
+you can go a grab a coffee, read your mails, build that treehouse you promised
+your kids last summer, etc...</p>
+<p>If you want to set some custom variables or edit the virtual machine in any way
+before starting it up, remove the <code class="docutils literal"><span class="pre">--up</span></code> flag and take a look at the
+<a class="reference internal" href="configuration/aeriscloud.yml.html"><em>.aeriscloud.yml</em></a> file. Once done you can just manually run:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>aeris up
+</pre></div>
+</div>
+<p>Once the provisioning is done, you&#8217;ll have a fully running virtual machine with
+the services you selected already installed and running, you can ssh in the machine
+with <code class="docutils literal"><span class="pre">aeris</span> <span class="pre">ssh</span></code>, you can suspend it by running <code class="docutils literal"><span class="pre">aeris</span> <span class="pre">suspend</span></code>, halt it by
+running <code class="docutils literal"><span class="pre">aeris</span> <span class="pre">halt</span></code> and finally destroy all traces of it by running <code class="docutils literal"><span class="pre">aeris</span> <span class="pre">destroy</span></code>.</p>
+<p>Your code is mounted to <code class="docutils literal"><span class="pre">/home/vagrant/my-project</span></code>, one can use their favorite
+language, provided that the proper roles have been installed. The recommended
+way to manage dependencies, builds, etc... is through makefiles, the format is
+relatively simple though maybe limited. The recommended way to run your make
+commands is either via <code class="docutils literal"><span class="pre">aeris</span> <span class="pre">ssh</span></code> or the <code class="docutils literal"><span class="pre">aeris</span> <span class="pre">make</span></code> shortcut.</p>
+<p>Here is a sample <code class="docutils literal"><span class="pre">Makefile</span></code> for a tentative node.js app:</p>
+<div class="highlight-makefile"><div class="highlight"><pre><span></span><span class="nf">.PHONY</span><span class="o">:</span> <span class="n">all</span> <span class="n">deps</span> <span class="n">build</span> <span class="n">run</span>
+
+<span class="nf">all</span><span class="o">:</span> <span class="n">build</span>
+
+<span class="nf">node_modules</span><span class="o">:</span>
+      npm install
+
+<span class="nf">deps</span><span class="o">:</span> <span class="n">node_modules</span>
+
+<span class="nf">build</span><span class="o">:</span> <span class="n">deps</span>
+      gulp assets
+
+<span class="nf">run</span><span class="o">:</span>
+      node .
+</pre></div>
+</div>
+</div>
+<div class="section" id="what-s-next">
+<h2>What&#8217;s Next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
+<p>At this point you can already work on your application and test it in a contained
+environment, but the whole point of AerisCloud is to be able to run the same
+provisioning scripts on both your local box and your online servers. To learn how
+to do so, proceed to <a class="reference internal" href="commands/cloud.html"><em>Cloud Command</em></a> for more details on how ansible is
+used and how to write proper roles for your organization.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/aeriscloud.svg" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started</a><ul>
+<li><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li><a class="reference internal" href="#manual-installation">Manual Installation</a></li>
+<li><a class="reference internal" href="#setting-up-aeriscloud">Setting up AerisCloud</a></li>
+<li><a class="reference internal" href="#starting-a-new-project">Starting a New Project</a></li>
+<li><a class="reference internal" href="#what-s-next">What&#8217;s Next?</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">AerisCloud</a></li>
+      <li>Next: <a href="configuration/aeriscloud.yml.html" title="next chapter">.aeriscloud.yml</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/getting-started.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Wizcorp Inc.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="_sources/getting-started.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

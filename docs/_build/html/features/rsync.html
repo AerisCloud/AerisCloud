@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Rsync Mode &mdash; AerisCloud 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="AerisCloud 1.4.0 documentation" href="../index.html" />
+    <link rel="next" title="Getting Started" href="../server-operators/getting-started.html" />
+    <link rel="prev" title="Configuration" href="../configuration/index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="rsync-mode">
+<h1>Rsync Mode<a class="headerlink" href="#rsync-mode" title="Permalink to this headline">¶</a></h1>
+<p>By default your project folder is shared with your vagrant VM by using the <a class="reference external" href="nfs.com">NFS</a>
+protocol and mounting your project folder to <code class="docutils literal"><span class="pre">/home/vagrant/{project</span> <span class="pre">name}</span></code>.
+NFS allows accessing the same files both on the host and the guest but it comes
+with a trade-off: it can be fairly slow when doing many small file operations.</p>
+<p>When you hit that kind of bottleneck, two solutions become available:</p>
+<ul class="simple">
+<li>Move the file operations to another folder, using /data work well or</li>
+<li>Enable the <a class="reference internal" href="../configuration/aeriscloud.yml.html#aeriscloud-yml-use-rsync"><span>use_rsync</span></a> flag</li>
+</ul>
+<p>When using the rsync mode, instead of using NFS, files will be copied from your
+local system to the VM when running aeris commands, making filesystem operations
+a lot more efficient at the cost of potential desyncs.</p>
+<div class="section" id="how">
+<h2>How?<a class="headerlink" href="#how" title="Permalink to this headline">¶</a></h2>
+<p>To enable rsync mode:</p>
+<ul class="simple">
+<li>First stop your box by calling <code class="docutils literal"><span class="pre">aeris</span> <span class="pre">halt</span></code>, suspend will not work for
+this operation.</li>
+<li>Edit your <a class="reference internal" href="../configuration/aeriscloud.yml.html"><em>.aeriscloud.yml</em></a> file and set the <a class="reference internal" href="../configuration/aeriscloud.yml.html#aeriscloud-yml-use-rsync"><span>use_rsync</span></a>
+flag to true.</li>
+<li>Start your box by running <code class="docutils literal"><span class="pre">aeris</span> <span class="pre">up</span></code>.</li>
+</ul>
+<p>Depending on the size of the project, the first copy might take a while. Once
+everything is up and running, files will be synchronized from your project
+folder to your VM on the following actions:</p>
+<ul class="simple">
+<li><a class="reference internal" href="../commands/aeris.html#aeris-up"><span>aeris up</span></a></li>
+<li><a class="reference internal" href="../commands/aeris.html#aeris-git"><span>aeris git</span></a></li>
+<li><a class="reference internal" href="../commands/aeris.html#aeris-make"><span>aeris make</span></a></li>
+<li><a class="reference internal" href="../commands/aeris.html#aeris-sync"><span>aeris sync</span></a></li>
+<li><a class="reference internal" href="../commands/aeris.html#aeris-watch"><span>aeris watch</span></a></li>
+</ul>
+<p>If you run any other command, synchronization will not happen so be careful.</p>
+</div>
+<div class="section" id="exclude-files-from-sync">
+<h2>Exclude Files from Sync<a class="headerlink" href="#exclude-files-from-sync" title="Permalink to this headline">¶</a></h2>
+<p>When synchronization happens it deletes any file on the VM that does not
+exist in your local folder, the issue that can emerge with this behaviour
+is that folders such as <code class="docutils literal"><span class="pre">node_modules</span></code> or sqlite dbs might be erased.
+To prevent this behaviour you can use the <a class="reference internal" href="../configuration/aeriscloud.yml.html#aeriscloud-yml-rsync-ignores"><span>rsync_ignores</span></a>
+option in your <a class="reference internal" href="../configuration/aeriscloud.yml.html"><em>.aeriscloud.yml</em></a> file.</p>
+</div>
+<div class="section" id="manual-sync">
+<h2>Manual Sync<a class="headerlink" href="#manual-sync" title="Permalink to this headline">¶</a></h2>
+<p>While the commands described above sync data to the VM, you might want to
+retrieve the data back to your local environment, to do so AerisCloud
+gives you two commands:</p>
+<ul class="simple">
+<li><a class="reference internal" href="../commands/aeris.html#aeris-sync"><span>aeris sync</span></a> <strong>up</strong> to copy files from your computer to the VM</li>
+<li><a class="reference internal" href="../commands/aeris.html#aeris-sync"><span>aeris sync</span></a> <strong>down</strong> to copy files from the VM to your computer</li>
+</ul>
+</div>
+<div class="section" id="disabling-rsync">
+<h2>Disabling Rsync<a class="headerlink" href="#disabling-rsync" title="Permalink to this headline">¶</a></h2>
+<p>If you want to go back to NFS at any point, running the same steps as above
+but removing the <a class="reference internal" href="../configuration/aeriscloud.yml.html#aeriscloud-yml-use-rsync"><span>use_rsync</span></a> flag will work.</p>
+<p>If you wish to keep any file the application might have created on the box,
+the easiest way is to remove the <a class="reference internal" href="../configuration/aeriscloud.yml.html#aeriscloud-yml-rsync-ignores"><span>rsync_ignores</span></a>
+configuration and run <a class="reference internal" href="../commands/aeris.html#aeris-sync"><span>aeris sync</span></a> <code class="docutils literal"><span class="pre">down</span></code> before shutting down the VM.</p>
+<p>If you didn&#8217;t run <a class="reference internal" href="../commands/aeris.html#aeris-sync"><span>aeris sync</span></a> before restarting, your data is still
+safely stored in <code class="docutils literal"><span class="pre">/data/{project</span> <span class="pre">name}</span></code>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/aeriscloud.svg" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Rsync Mode</a><ul>
+<li><a class="reference internal" href="#how">How?</a></li>
+<li><a class="reference internal" href="#exclude-files-from-sync">Exclude Files from Sync</a></li>
+<li><a class="reference internal" href="#manual-sync">Manual Sync</a></li>
+<li><a class="reference internal" href="#disabling-rsync">Disabling Rsync</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../configuration/index.html" title="previous chapter">Configuration</a></li>
+      <li>Next: <a href="../server-operators/getting-started.html" title="next chapter">Getting Started</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/features/rsync.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Wizcorp Inc.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/features/rsync.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

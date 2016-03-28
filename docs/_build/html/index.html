@@ -1,0 +1,269 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>AerisCloud &mdash; AerisCloud 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="AerisCloud 1.4.0 documentation" href="#" />
+    <link rel="next" title="Getting Started" href="getting-started.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aeriscloud">
+<h1>AerisCloud<a class="headerlink" href="#aeriscloud" title="Permalink to this headline">¶</a></h1>
+<p>AerisCloud is a tool that gives application developers development environments
+that are identical to the production servers, and gives system administrators a
+way to organize their infrastructure as it is growing in size.</p>
+<p>To accomplish this goal it extends 2 popular tools: <code class="docutils literal"><span class="pre">vagrant</span></code> and <code class="docutils literal"><span class="pre">ansible</span></code>;
+and offers a simple to use unified command line interface to manage their projects.</p>
+<div class="section" id="user-s-guide">
+<h2>User&#8217;s Guide<a class="headerlink" href="#user-s-guide" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#manual-installation">Manual Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#setting-up-aeriscloud">Setting up AerisCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#starting-a-new-project">Starting a New Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#what-s-next">What&#8217;s Next?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration/aeriscloud.yml.html">.aeriscloud.yml</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration/aeriscloud.yml.html#project-name"><code class="docutils literal"><span class="pre">project_name</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/aeriscloud.yml.html#organization"><code class="docutils literal"><span class="pre">organization</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/aeriscloud.yml.html#id"><code class="docutils literal"><span class="pre">id</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/aeriscloud.yml.html#services"><code class="docutils literal"><span class="pre">services</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/aeriscloud.yml.html#boxes"><code class="docutils literal"><span class="pre">boxes</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/aeriscloud.yml.html#mounts"><code class="docutils literal"><span class="pre">mounts</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/aeriscloud.yml.html#watch"><code class="docutils literal"><span class="pre">watch</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/aeriscloud.yml.html#browse"><code class="docutils literal"><span class="pre">browse</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/aeriscloud.yml.html#use-rsync"><code class="docutils literal"><span class="pre">use_rsync</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/aeriscloud.yml.html#rsync-ignores"><code class="docutils literal"><span class="pre">rsync_ignores</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/aeriscloud.yml.html#extra-variables">Extra Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="organization.html">Organization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="organization.html#what-is-an-organization">What is an organization?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="organization.html#folder-structure">Folder structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="organization.html#creating-a-new-role">Creating a New Role</a></li>
+<li class="toctree-l2"><a class="reference internal" href="organization.html#env-production-yml">env_production.yml</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration/index.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration/index.html#config">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/index.html#github">github</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/index.html#aeris">aeris</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="features/rsync.html">Rsync Mode</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="features/rsync.html#how">How?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features/rsync.html#exclude-files-from-sync">Exclude Files from Sync</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features/rsync.html#manual-sync">Manual Sync</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features/rsync.html#disabling-rsync">Disabling Rsync</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="server-operator-s-guide">
+<h2>Server Operator&#8217;s Guide<a class="headerlink" href="#server-operator-s-guide" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="server-operators/getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="server-operators/getting-started.html#managing-roles-and-playbooks">Managing Roles and Playbooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-operators/getting-started.html#taking-inventory">Taking Inventory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-operators/getting-started.html#provisioning">Provisioning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-operators/getting-started.html#jobs">Jobs</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="commands">
+<h2>Commands<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="commands/aeris.html">Aeris Command</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris"><code class="docutils literal"><span class="pre">aeris</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-box"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">box</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-box-generate"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">box</span> <span class="pre">generate</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-box-list"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">box</span> <span class="pre">list</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-browse"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">browse</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-build"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">build</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-config"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">config</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-destroy"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">destroy</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-expose"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">expose</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-expose-announce"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">expose</span> <span class="pre">announce</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-expose-list"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">expose</span> <span class="pre">list</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-expose-start"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">expose</span> <span class="pre">start</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-expose-status"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">expose</span> <span class="pre">status</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-expose-stop"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">expose</span> <span class="pre">stop</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-fetch"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">fetch</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-git"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">git</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-goto"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">goto</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-halt"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">halt</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-history"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">history</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-init"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">init</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-job"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">job</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-make"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">make</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-provision"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">provision</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-ssh"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">ssh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-status"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">status</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-suspend"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">suspend</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-sync"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">sync</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-up"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">up</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-update"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">update</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-version"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">version</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/aeris.html#aeris-watch"><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">watch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="commands/cloud.html">Cloud Command</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud"><code class="docutils literal"><span class="pre">cloud</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-inventory"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">inventory</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-inventory-edit"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">inventory</span> <span class="pre">edit</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-inventory-goto"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">inventory</span> <span class="pre">goto</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-inventory-install"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">inventory</span> <span class="pre">install</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-inventory-list"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">inventory</span> <span class="pre">list</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-inventory-remove"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">inventory</span> <span class="pre">remove</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-job"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">job</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-organization"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">organization</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-organization-goto"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">organization</span> <span class="pre">goto</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-organization-init"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">organization</span> <span class="pre">init</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-organization-install"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">organization</span> <span class="pre">install</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-organization-list"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">organization</span> <span class="pre">list</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-organization-remove"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">organization</span> <span class="pre">remove</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-provision"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">provision</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-rsync"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">rsync</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-run"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">run</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-shell"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">shell</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-ssh"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">ssh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-update"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">update</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/cloud.html#cloud-version"><code class="docutils literal"><span class="pre">cloud</span> <span class="pre">version</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="contributor-s-guide">
+<h2>Contributor&#8217;s Guide<a class="headerlink" href="#contributor-s-guide" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#working-on-the-source">Working on the Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#coding-standards">Coding Standards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#adding-new-commands">Adding New Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#submitting-code">Submitting Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#api">API</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span>Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span>Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span>Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/aeriscloud.svg" alt="Logo"/>
+            </a></p>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AerisCloud</a><ul>
+<li><a class="reference internal" href="#user-s-guide">User&#8217;s Guide</a></li>
+<li><a class="reference internal" href="#server-operator-s-guide">Server Operator&#8217;s Guide</a></li>
+<li><a class="reference internal" href="#commands">Commands</a></li>
+<li><a class="reference internal" href="#contributor-s-guide">Contributor&#8217;s Guide</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="getting-started.html" title="next chapter">Getting Started</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Wizcorp Inc.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="_sources/index.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
