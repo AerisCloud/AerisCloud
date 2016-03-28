@@ -1,0 +1,503 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>aeriscloud.box &mdash; AerisCloud 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="AerisCloud 1.4.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for aeriscloud.box</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">arrow</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">paramiko</span> <span class="kn">import</span> <span class="n">SSHClient</span>
+<span class="kn">from</span> <span class="nn">sh</span> <span class="kn">import</span> <span class="n">ssh</span><span class="p">,</span> <span class="n">rsync</span><span class="p">,</span> <span class="n">Command</span><span class="p">,</span> \
+    <span class="n">ErrorReturnCode_1</span><span class="p">,</span> <span class="n">ErrorReturnCode_255</span><span class="p">,</span> <span class="n">ErrorReturnCode</span>
+<span class="kn">from</span> <span class="nn">slugify</span> <span class="kn">import</span> <span class="n">slugify</span>
+<span class="kn">from</span> <span class="nn">subprocess32</span> <span class="kn">import</span> <span class="n">call</span><span class="p">,</span> <span class="n">Popen</span>
+
+<span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">expose_username</span><span class="p">,</span> <span class="n">expose_url</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">,</span> <span class="n">verbosity</span>
+<span class="kn">from</span> <span class="nn">.expose</span> <span class="kn">import</span> <span class="n">expose</span>
+<span class="kn">from</span> <span class="nn">.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">quote</span>
+<span class="kn">from</span> <span class="nn">.vagrant</span> <span class="kn">import</span> <span class="n">ansible_env</span>
+<span class="kn">from</span> <span class="nn">.virtualbox</span> <span class="kn">import</span> <span class="n">list_vms</span><span class="p">,</span> <span class="n">vm_network</span><span class="p">,</span> <span class="n">vm_ip</span><span class="p">,</span> \
+    <span class="n">vm_info</span><span class="p">,</span> <span class="n">vm_start</span><span class="p">,</span> <span class="n">vm_suspend</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="s1">&#39;box&#39;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">BoxList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">not_created</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">box</span> <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">box</span><span class="o">.</span><span class="n">status</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;not created&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">running</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">box</span> <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">box</span><span class="o">.</span><span class="n">is_running</span><span class="p">()]</span>
+
+    <span class="k">def</span> <span class="nf">suspended</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">box</span> <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">box</span><span class="o">.</span><span class="n">status</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;saved&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">box</span> <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">box</span><span class="o">.</span><span class="n">status</span><span class="p">()</span> <span class="o">==</span> <span class="n">status</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="Box"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box">[docs]</a><span class="k">class</span> <span class="nc">Box</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents an AerisCloud VM, might or might not be running, take</span>
+<span class="sd">    a Project instance and an entry from the .aeriscloud.yml infra</span>
+<span class="sd">    configuration</span>
+
+<span class="sd">    :param project: project.Project</span>
+<span class="sd">    :param data: dict[str,str]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">NO_PROJECT_DIR</span> <span class="o">=</span> <span class="mi">254</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vm_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vm_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basebox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;basebox&#39;</span><span class="p">,</span> <span class="s1">&#39;chef/centos-7.0&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Box.name"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the name of the box in the project&#39;s infra</span>
+
+<span class="sd">        :return: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">basebox</span>
+
+<div class="viewcode-block" id="Box.vm_name"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box.vm_name">[docs]</a>    <span class="k">def</span> <span class="nf">vm_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the VM name</span>
+
+<span class="sd">        :return: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vm_name</span></div>
+
+<div class="viewcode-block" id="Box.info"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return all the information about a box, kinda messy</span>
+
+<span class="sd">        :return: dict[str,str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">vm_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vm_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Box.status"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box.status">[docs]</a>    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the current status of the VM</span>
+
+<span class="sd">        :return: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vm_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">list_vms</span><span class="p">():</span>
+            <span class="k">return</span> <span class="s1">&#39;not created&#39;</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;VMState&#39;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;VMState&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;shutdown&#39;</span></div>
+
+    <span class="k">def</span> <span class="nf">last_status_change</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;VMStateChangeTime&#39;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="n">change_time</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;VMStateChangeTime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">arrow</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">change_time</span><span class="p">[:</span><span class="o">-</span><span class="mi">10</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;local&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">forwards</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;protocol&#39;</span><span class="p">,</span> <span class="s1">&#39;host_ip&#39;</span><span class="p">,</span> <span class="s1">&#39;host_port&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;guest_ip&#39;</span><span class="p">,</span> <span class="s1">&#39;guest_port&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">([</span>
+            <span class="p">(</span>
+                <span class="n">info</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]))</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">()</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Forwarding&#39;</span><span class="p">)</span>
+        <span class="p">])</span>
+
+<div class="viewcode-block" id="Box.is_running"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box.is_running">[docs]</a>    <span class="k">def</span> <span class="nf">is_running</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return whether or not the VM is currently running</span>
+
+<span class="sd">        :return: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vm_name</span> <span class="ow">in</span> <span class="n">list_vms</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Box.network"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box.network">[docs]</a>    <span class="k">def</span> <span class="nf">network</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the information for every network interfaces on the VM</span>
+<span class="sd">        (kinda slow)</span>
+
+<span class="sd">        :return: list[map[str,str]]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">vm_network</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vm_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Box.ip"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box.ip">[docs]</a>    <span class="k">def</span> <span class="nf">ip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the IP of a box for the given interface, by default</span>
+<span class="sd">        aeriscloud VMs have 2 interfaces:</span>
+<span class="sd">        * id 0: NAT interface, on the 10.0.0.0 network</span>
+<span class="sd">        * id 1: Host Only interface on the 172.16.0.0 network</span>
+
+<span class="sd">        :param id: int</span>
+<span class="sd">        :return: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">vm_ip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vm_name</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">ssh_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Vagrant 1.7+ support</span>
+        <span class="n">local_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">vagrant_dir</span><span class="p">(),</span> <span class="s1">&#39;machines&#39;</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="s1">&#39;virtualbox&#39;</span><span class="p">,</span> <span class="s1">&#39;private_key&#39;</span><span class="p">)</span>
+        <span class="n">insecure_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">],</span> <span class="s1">&#39;.vagrant.d&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;insecure_private_key&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">local_key</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;using key &quot;</span><span class="si">%s</span><span class="s1">&quot; for ssh connection&#39;</span><span class="p">,</span> <span class="n">local_key</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">local_key</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;using key &quot;</span><span class="si">%s</span><span class="s1">&quot; for ssh connection&#39;</span><span class="p">,</span> <span class="n">insecure_key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">insecure_key</span>
+
+<div class="viewcode-block" id="Box.ssh"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box.ssh">[docs]</a>    <span class="k">def</span> <span class="nf">ssh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a pre-baked ssh client method to be used for calling</span>
+<span class="sd">        commands on the distant server. Each command called will be in</span>
+<span class="sd">        a different connection.</span>
+
+<span class="sd">        :return: sh.Command</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ssh</span><span class="o">.</span><span class="n">bake</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">(),</span> <span class="s1">&#39;-A&#39;</span><span class="p">,</span> <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ssh_key</span><span class="p">(),</span> <span class="n">l</span><span class="o">=</span><span class="s1">&#39;vagrant&#39;</span><span class="p">,</span>
+                        <span class="n">o</span><span class="o">=</span><span class="s1">&#39;StrictHostKeyChecking no&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Box.ssh_client"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box.ssh_client">[docs]</a>    <span class="k">def</span> <span class="nf">ssh_client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        When needing a more precise SSH client, returns a paramiko SSH client</span>
+
+<span class="sd">        :return: paramiko.SSHClient</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">SSHClient</span><span class="p">()</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">load_system_host_keys</span><span class="p">()</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">(),</span> <span class="n">username</span><span class="o">=</span><span class="s1">&#39;vagrant&#39;</span><span class="p">,</span> <span class="n">pkey</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ssh_key</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">client</span></div>
+
+<div class="viewcode-block" id="Box.ssh_shell"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box.ssh_shell">[docs]</a>    <span class="k">def</span> <span class="nf">ssh_shell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cd</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">popen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create an interactive ssh shell on the remote VM</span>
+
+<span class="sd">        :return: subprocess32.Popen</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">call_args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">(),</span> <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;-A&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="s1">&#39;vagrant&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_key</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="n">cmd</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="n">cmd</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">cd</span><span class="p">:</span>
+                <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;[ ! -d &quot;{0}&quot; ] &amp;&amp; exit {1}; cd &quot;{0}&quot;; {2}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">NO_PROJECT_DIR</span><span class="p">,</span>
+                    <span class="n">cmd</span>
+                <span class="p">)</span>
+            <span class="n">call_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;calling </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">call_args</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">popen</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Popen</span><span class="p">(</span><span class="n">call_args</span><span class="p">,</span> <span class="n">start_new_session</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">call</span><span class="p">(</span><span class="n">call_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vagrant</span><span class="p">(</span><span class="s1">&#39;up&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">expose</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">halt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vagrant</span><span class="p">(</span><span class="s1">&#39;halt&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">expose</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+<div class="viewcode-block" id="Box.resume"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box.resume">[docs]</a>    <span class="k">def</span> <span class="nf">resume</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resume a suspended box</span>
+
+<span class="sd">        :return: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;saved&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="n">vm_start</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vm_name</span><span class="p">)</span>
+        <span class="n">expose</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">True</span></div>
+
+<div class="viewcode-block" id="Box.suspend"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box.suspend">[docs]</a>    <span class="k">def</span> <span class="nf">suspend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save the state of a running box</span>
+
+<span class="sd">        :return: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="n">vm_suspend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vm_name</span><span class="p">)</span>
+        <span class="n">expose</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">True</span></div>
+
+    <span class="k">def</span> <span class="nf">destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vagrant</span><span class="p">(</span><span class="s1">&#39;destroy&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">expose</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">expose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">expose</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Box.vagrant"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box.vagrant">[docs]</a>    <span class="k">def</span> <span class="nf">vagrant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs a vagrant command</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">()])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">vagrant</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Box.browse"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box.browse">[docs]</a>    <span class="k">def</span> <span class="nf">browse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given an endpoint, returns the URI to that endpoint</span>
+
+<span class="sd">        :param endpoint: str</span>
+<span class="sd">        :param ip: bool</span>
+<span class="sd">        :return: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ip</span> <span class="ow">and</span> <span class="n">expose</span><span class="o">.</span><span class="n">enabled</span><span class="p">():</span>
+            <span class="n">host</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
+                                    <span class="n">expose_username</span><span class="p">(),</span>
+                                    <span class="n">expose_url</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">host</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">()</span>
+
+        <span class="n">project_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">config</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;browse&#39;</span> <span class="ow">in</span> <span class="n">project_config</span> \
+                <span class="ow">and</span> <span class="n">endpoint</span> <span class="ow">in</span> <span class="n">project_config</span><span class="p">[</span><span class="s1">&#39;browse&#39;</span><span class="p">]:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">project_config</span><span class="p">[</span><span class="s1">&#39;browse&#39;</span><span class="p">][</span><span class="n">endpoint</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">services</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="p">():</span>
+                <span class="k">if</span> <span class="s1">&#39;path&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">service</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">services</span><span class="p">[</span><span class="n">slugify</span><span class="p">(</span><span class="n">service</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])]</span> <span class="o">=</span> <span class="n">service</span>
+            <span class="k">if</span> <span class="n">endpoint</span> <span class="ow">in</span> <span class="n">services</span><span class="p">:</span>
+                <span class="n">service</span> <span class="o">=</span> <span class="n">services</span><span class="p">[</span><span class="n">endpoint</span><span class="p">]</span>
+                <span class="k">return</span> <span class="s1">&#39;http://&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> \
+                       <span class="o">+</span> <span class="n">service</span><span class="p">[</span><span class="s1">&#39;port&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">service</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span>
+
+            <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
+
+        <span class="k">return</span> <span class="s1">&#39;http://&#39;</span> <span class="o">+</span> <span class="n">host</span> <span class="o">+</span> <span class="n">path</span></div>
+
+<div class="viewcode-block" id="Box.services"><a class="viewcode-back" href="../../contributing.html#aeriscloud.box.Box.services">[docs]</a>    <span class="k">def</span> <span class="nf">services</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        List the services running on the box</span>
+
+<span class="sd">        :return: dict[str,str,str,str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span>
+                <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span>
+                    <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">,</span> <span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="s1">&#39;protocol&#39;</span><span class="p">],</span>
+                    <span class="n">service</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                <span class="p">))</span>
+                <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh</span><span class="p">()</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="s1">&#39;/etc/aeriscloud.d/*&#39;</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="k">except</span> <span class="n">ErrorReturnCode_1</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">except</span> <span class="n">ErrorReturnCode_255</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[]</span></div>
+
+    <span class="k">def</span> <span class="nf">history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ssh</span><span class="p">()</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="s1">&#39;/home/vagrant/.provision&#39;</span><span class="p">)]</span>
+        <span class="k">except</span> <span class="n">ErrorReturnCode_1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="k">except</span> <span class="n">ErrorReturnCode_255</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">ansible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="o">=</span><span class="s1">&#39;ansible-playbook&#39;</span><span class="p">):</span>
+        <span class="n">tmp_inventory_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">(),</span> <span class="s1">&#39;vagrant-inventory&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">tmp_inventory_dir</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">tmp_inventory_dir</span><span class="p">)</span>
+
+        <span class="c1"># create a temporary inventory file for ansible</span>
+        <span class="n">tmp_inventory_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_inventory_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vm_name</span><span class="p">())</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmp_inventory_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> ansible_ssh_host=</span><span class="si">%s</span><span class="s1"> ansible_ssh_port=22 &#39;</span>
+                    <span class="s1">&#39;ansible_ssh_private_key_file=</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">vm_name</span><span class="p">(),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">(),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ssh_key</span><span class="p">()</span>
+                    <span class="p">))</span>
+
+        <span class="n">ansible</span> <span class="o">=</span> <span class="n">Command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="n">new_env</span> <span class="o">=</span> <span class="n">ansible_env</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">ansible</span><span class="o">.</span><span class="n">bake</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="n">tmp_inventory_file</span><span class="p">,</span>
+                            <span class="s1">&#39;--extra-vars&#39;</span><span class="p">,</span> <span class="s1">&#39;@</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">config_file</span><span class="p">(),</span>
+                            <span class="n">_env</span><span class="o">=</span><span class="n">new_env</span><span class="p">,</span>
+                            <span class="n">_out_bufsize</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                            <span class="n">_err_bufsize</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rsync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
+        <span class="c1"># enable arcfour and no compression for faster speed</span>
+        <span class="n">ssh_options</span> <span class="o">=</span> <span class="s1">&#39;ssh -T -c arcfour -o Compression=no -x &#39;</span> \
+                      <span class="s1">&#39;-i &quot;</span><span class="si">%s</span><span class="s1">&quot; -l vagrant&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_key</span><span class="p">()</span>
+
+        <span class="c1"># basic args for rsync</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;--delete&#39;</span><span class="p">,</span> <span class="s1">&#39;--archive&#39;</span><span class="p">,</span> <span class="s1">&#39;--hard-links&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;--one-file-system&#39;</span><span class="p">,</span> <span class="s1">&#39;--compress-level=0&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;--omit-dir-times&#39;</span><span class="p">,</span> <span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="n">ssh_options</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">verbosity</span><span class="p">():</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbosity</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;--progress&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbosity</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;--stats&#39;</span><span class="p">)</span>
+
+        <span class="c1"># check for ignore</span>
+        <span class="n">conf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">config</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;rsync_ignores&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">:</span>
+            <span class="c1"># TODO: check format</span>
+            <span class="n">args</span> <span class="o">+=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;--exclude=&quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="p">,</span>
+                        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;rsync_ignores&#39;</span><span class="p">])</span>
+
+        <span class="c1"># then add sec and dest</span>
+        <span class="n">args</span> <span class="o">+=</span> <span class="p">[</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;running: rsync </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">rsync</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span>
+                  <span class="n">_out</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">_err</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+                  <span class="n">_out_bufsize</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">_err_bufsize</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ErrorReturnCode</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="k">return</span> <span class="bp">True</span>
+
+    <span class="k">def</span> <span class="nf">rsync_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">rsync_enabled</span><span class="p">():</span>
+            <span class="k">return</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rsync</span><span class="p">(</span>
+            <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">(),</span>
+            <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">:/data/</span><span class="si">%s</span><span class="s1">/&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">name</span><span class="p">())</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rsync_down</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">rsync_enabled</span><span class="p">():</span>
+            <span class="k">return</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rsync</span><span class="p">(</span>
+            <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">:/data/</span><span class="si">%s</span><span class="s1">/&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">name</span><span class="p">()),</span>
+            <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">()</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;Box </span><span class="si">%s</span><span class="s1"> from project </span><span class="si">%s</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">name</span><span class="p">())</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/aeriscloud.svg" alt="Logo"/>
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Wizcorp Inc.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

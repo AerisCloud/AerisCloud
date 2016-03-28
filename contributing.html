@@ -1,0 +1,678 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Contributing &mdash; AerisCloud 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="AerisCloud 1.4.0 documentation" href="index.html" />
+    <link rel="prev" title="Cloud Command" href="commands/cloud.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
+<p>Want to contribute to AerisCloud? This page describes the development flow and
+the code organization.</p>
+<p>AerisCloud is written in Python and is targeted at 2.7 as it is the most
+available version and the one provided by default on OSX.</p>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>If you&#8217;re looking to help document AerisCloud, you will need first to install
+sphinx and optionally sphinx-autobuild. The easiest way is to install it in
+the AerisCloud virtualenv:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Setup virtual environment</span>
+<span class="nb">source</span> venv/bin/activate
+<span class="c1"># Install Sphinx and Sphinx Autobuild</span>
+pip install sphinx sphinx-autobuild
+<span class="c1"># Go to documentation directory</span>
+<span class="nb">cd</span> docs
+<span class="c1"># Run autobuild</span>
+sphinx-autobuild . _build/html
+</pre></div>
+</div>
+<p>Running <code class="docutils literal"><span class="pre">make</span> <span class="pre">docs</span></code> will install the basic requirements and build the current
+version of the documentation. <code class="docutils literal"><span class="pre">make</span> <span class="pre">publish-docs</span></code> can then be used to publish
+to the <code class="docutils literal"><span class="pre">gh-pages</span></code> branch.</p>
+</div>
+<div class="section" id="working-on-the-source">
+<h2>Working on the Source<a class="headerlink" href="#working-on-the-source" title="Permalink to this headline">¶</a></h2>
+<p>Most of the code is located in the <code class="docutils literal"><span class="pre">aeriscloud</span></code> subfolder as python files.
+The recommended way to work on the project is to fork it on GitHub, clone it to
+a folder of your choice then run the manual installation steps. When sourcing
+<code class="docutils literal"><span class="pre">scripts/env.sh</span></code> the <code class="docutils literal"><span class="pre">aeris</span></code> and <code class="docutils literal"><span class="pre">cloud</span></code> commands will point to
+your fork, then you can just start hacking at the Python source.</p>
+</div>
+<div class="section" id="coding-standards">
+<h2>Coding Standards<a class="headerlink" href="#coding-standards" title="Permalink to this headline">¶</a></h2>
+<p>AerisCloud uses <a class="reference external" href="https://flake8.readthedocs.org/">flake8</a> to validate it&#8217;s code, you can run the linters with
+<span class="xref std std-ref">aeris-test</span>, indentation is 4 spaces and line length is 80 characters.</p>
+</div>
+<div class="section" id="adding-new-commands">
+<h2>Adding New Commands<a class="headerlink" href="#adding-new-commands" title="Permalink to this headline">¶</a></h2>
+<p>Commands are stored in the <code class="docutils literal"><span class="pre">aeriscloud/cli/&lt;command&gt;</span></code> folders and are simple
+python files exporting at least a <code class="docutils literal"><span class="pre">cli</span></code> function that is a valid <a class="reference external" href="http://click.pocoo.org/4/">click</a>
+command.</p>
+<p>Here is a very basic example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># aerisclound/cli/aeris/debug.py</span>
+
+<span class="kn">import</span> <span class="nn">click</span>
+
+<span class="c1"># The Command class in cli.helpers sets a few default shared</span>
+<span class="c1"># between all AerisCloud commands</span>
+<span class="kn">from</span> <span class="nn">aeriscloud.cli.helpers</span> <span class="kn">import</span> <span class="n">Command</span>
+
+<span class="nd">@click.command</span><span class="p">(</span><span class="n">cls</span><span class="o">=</span><span class="n">Command</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">cli</span><span class="p">():</span>
+      <span class="c1"># click.echo should be used instead of print()</span>
+      <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This command would then be available as <code class="docutils literal"><span class="pre">aeris</span> <span class="pre">debug</span></code>, also several decorators
+are available in <code class="docutils literal"><span class="pre">aeriscloud/cli/helpers.py</span></code> to make your life easier and are
+documented in the API doc.</p>
+</div>
+<div class="section" id="submitting-code">
+<h2>Submitting Code<a class="headerlink" href="#submitting-code" title="Permalink to this headline">¶</a></h2>
+<p>Code should be done in a branch on your fork, then submitted as a PR to the
+main repo. Make sure that your PR describe what you are changing in details,
+linking back to issues if necessary.</p>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-aeriscloud.project">
+<span id="aeriscloud-project"></span><h3><code class="docutils literal"><span class="pre">aeriscloud.project</span></code><a class="headerlink" href="#module-aeriscloud.project" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="aeriscloud.project.Project">
+<em class="property">class </em><code class="descclassname">aeriscloud.project.</code><code class="descname">Project</code><span class="sig-paren">(</span><em>folder</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/project.html#Project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.project.Project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents an AerisCloud project</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>folder</strong> &#8211; str The folder where the project is stored</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="aeriscloud.project.Project.box">
+<code class="descname">box</code><span class="sig-paren">(</span><em>name=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/project.html#Project.box"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.project.Project.box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a box by name
+:param name: str
+:return: Box|None</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.project.Project.boxes">
+<code class="descname">boxes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/project.html#Project.boxes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.project.Project.boxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the list of boxes available for this project
+:return: BoxList[Box]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.project.Project.name">
+<code class="descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/project.html#Project.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.project.Project.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the name of the project
+:return: str</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="aeriscloud.project.all">
+<code class="descclassname">aeriscloud.project.</code><code class="descname">all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/project.html#all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.project.all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return every projects available on the local host
+:return: list[Project]</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="aeriscloud.project.from_path">
+<code class="descclassname">aeriscloud.project.</code><code class="descname">from_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/project.html#from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.project.from_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the project stored in the given folder if any</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Project|None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="aeriscloud.project.get">
+<code class="descclassname">aeriscloud.project.</code><code class="descname">get</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/project.html#get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.project.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the project corresponding to the given project name or directory</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; str</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Project|None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-aeriscloud.box">
+<span id="aeriscloud-box"></span><h3><code class="docutils literal"><span class="pre">aeriscloud.box</span></code><a class="headerlink" href="#module-aeriscloud.box" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="aeriscloud.box.Box">
+<em class="property">class </em><code class="descclassname">aeriscloud.box.</code><code class="descname">Box</code><span class="sig-paren">(</span><em>project</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents an AerisCloud VM, might or might not be running, take
+a Project instance and an entry from the .aeriscloud.yml infra
+configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>project</strong> &#8211; project.Project</li>
+<li><strong>data</strong> &#8211; dict[str,str]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="aeriscloud.box.Box.browse">
+<code class="descname">browse</code><span class="sig-paren">(</span><em>endpoint=''</em>, <em>ip=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box.browse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box.browse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given an endpoint, returns the URI to that endpoint</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>endpoint</strong> &#8211; str</li>
+<li><strong>ip</strong> &#8211; bool</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.box.Box.info">
+<code class="descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all the information about a box, kinda messy</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dict[str,str]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.box.Box.ip">
+<code class="descname">ip</code><span class="sig-paren">(</span><em>id=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box.ip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box.ip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the IP of a box for the given interface, by default
+aeriscloud VMs have 2 interfaces:
+* id 0: NAT interface, on the 10.0.0.0 network
+* id 1: Host Only interface on the 172.16.0.0 network</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> &#8211; int</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.box.Box.is_running">
+<code class="descname">is_running</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box.is_running"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box.is_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether or not the VM is currently running</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.box.Box.name">
+<code class="descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the name of the box in the project&#8217;s infra</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.box.Box.network">
+<code class="descname">network</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box.network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box.network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the information for every network interfaces on the VM
+(kinda slow)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list[map[str,str]]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.box.Box.resume">
+<code class="descname">resume</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box.resume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box.resume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resume a suspended box</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.box.Box.services">
+<code class="descname">services</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box.services"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box.services" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the services running on the box</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dict[str,str,str,str]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.box.Box.ssh">
+<code class="descname">ssh</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box.ssh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box.ssh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a pre-baked ssh client method to be used for calling
+commands on the distant server. Each command called will be in
+a different connection.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">sh.Command</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.box.Box.ssh_client">
+<code class="descname">ssh_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box.ssh_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box.ssh_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>When needing a more precise SSH client, returns a paramiko SSH client</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">paramiko.SSHClient</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.box.Box.ssh_shell">
+<code class="descname">ssh_shell</code><span class="sig-paren">(</span><em>cmd=None</em>, <em>cd=True</em>, <em>popen=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box.ssh_shell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box.ssh_shell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an interactive ssh shell on the remote VM</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">subprocess32.Popen</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.box.Box.status">
+<code class="descname">status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box.status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current status of the VM</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.box.Box.suspend">
+<code class="descname">suspend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box.suspend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box.suspend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the state of a running box</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.box.Box.vagrant">
+<code class="descname">vagrant</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box.vagrant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box.vagrant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a vagrant command</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.box.Box.vm_name">
+<code class="descname">vm_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/box.html#Box.vm_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.box.Box.vm_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the VM name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-aeriscloud.config">
+<span id="aeriscloud-config"></span><h3><code class="docutils literal"><span class="pre">aeriscloud.config</span></code><a class="headerlink" href="#module-aeriscloud.config" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="aeriscloud.config.Config">
+<em class="property">class </em><code class="descclassname">aeriscloud.config.</code><code class="descname">Config</code><a class="reference internal" href="_modules/aeriscloud/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.config.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper around ConfigParser that provides a way to check for existence
+as well as a default kwargs for get that provides a default value</p>
+<dl class="method">
+<dt id="aeriscloud.config.Config.complete">
+<code class="descname">complete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/config.html#Config.complete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.config.Config.complete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the configuration has all basic config items set</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.config.Config.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>section</em>, <em>option</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/config.html#Config.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.config.Config.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an option from the configuration, if the option does not exists
+and no default is set, raises a configparser.Error</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>section</strong> &#8211; str</li>
+<li><strong>option</strong> &#8211; str</li>
+<li><strong>default</strong> &#8211; any</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.config.Config.has">
+<code class="descname">has</code><span class="sig-paren">(</span><em>section</em>, <em>option</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/config.html#Config.has"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.config.Config.has" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the given section and option exists</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>section</strong> &#8211; str</li>
+<li><strong>option</strong> &#8211; str</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.config.Config.save">
+<code class="descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/config.html#Config.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.config.Config.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the config file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.config.Config.set">
+<code class="descname">set</code><span class="sig-paren">(</span><em>section</em>, <em>option</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/config.html#Config.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.config.Config.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set an option in the configuration, does not save the config</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>section</strong> &#8211; str</li>
+<li><strong>option</strong> &#8211; str</li>
+<li><strong>value</strong> &#8211; any</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="aeriscloud.config.Config.unset">
+<code class="descname">unset</code><span class="sig-paren">(</span><em>section</em>, <em>option</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/config.html#Config.unset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.config.Config.unset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unset an option in the configuration, does not save the config</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>section</strong> &#8211; str</li>
+<li><strong>option</strong> &#8211; str</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="aeriscloud.config.inventory_path">
+<code class="descclassname">aeriscloud.config.</code><code class="descname">inventory_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/config.html#inventory_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.config.inventory_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the path to the ansible inventory files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-aeriscloud.cli.helpers">
+<span id="aeriscloud-cli-helpers"></span><h3><code class="docutils literal"><span class="pre">aeriscloud.cli.helpers</span></code><a class="headerlink" href="#module-aeriscloud.cli.helpers" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="aeriscloud.cli.helpers.CLITable">
+<em class="property">class </em><code class="descclassname">aeriscloud.cli.helpers.</code><code class="descname">CLITable</code><span class="sig-paren">(</span><em>*cols</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/cli/helpers.html#CLITable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.cli.helpers.CLITable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helps displaying a dynamically sized table a la docker ps</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="aeriscloud.cli.helpers.move_shell_to">
+<code class="descclassname">aeriscloud.cli.helpers.</code><code class="descname">move_shell_to</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/cli/helpers.html#move_shell_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.cli.helpers.move_shell_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the process is called through the function set in scripts/env.sh,
+will move the user to the given path on successful exit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> &#8211; str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="aeriscloud.cli.helpers.standard_options">
+<code class="descclassname">aeriscloud.cli.helpers.</code><code class="descname">standard_options</code><span class="sig-paren">(</span><em>multiple=False</em>, <em>start_prompt=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aeriscloud/cli/helpers.html#standard_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aeriscloud.cli.helpers.standard_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the standard &#8211;project and &#8211;box options to a command
+:param multiple: Whether to find a single or multiple boxes
+:param start_prompt: When using single boxes, ask the user to start it if</p>
+<blockquote>
+<div>offline</div></blockquote>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/aeriscloud.svg" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Contributing</a><ul>
+<li><a class="reference internal" href="#documentation">Documentation</a></li>
+<li><a class="reference internal" href="#working-on-the-source">Working on the Source</a></li>
+<li><a class="reference internal" href="#coding-standards">Coding Standards</a></li>
+<li><a class="reference internal" href="#adding-new-commands">Adding New Commands</a></li>
+<li><a class="reference internal" href="#submitting-code">Submitting Code</a></li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#module-aeriscloud.project"><code class="docutils literal"><span class="pre">aeriscloud.project</span></code></a></li>
+<li><a class="reference internal" href="#module-aeriscloud.box"><code class="docutils literal"><span class="pre">aeriscloud.box</span></code></a></li>
+<li><a class="reference internal" href="#module-aeriscloud.config"><code class="docutils literal"><span class="pre">aeriscloud.config</span></code></a></li>
+<li><a class="reference internal" href="#module-aeriscloud.cli.helpers"><code class="docutils literal"><span class="pre">aeriscloud.cli.helpers</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="commands/cloud.html" title="previous chapter">Cloud Command</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/contributing.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Wizcorp Inc.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="_sources/contributing.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
