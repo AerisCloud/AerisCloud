@@ -2,7 +2,7 @@ WORK_DIR = $(shell pwd)
 WRAPPER = $(shell if [ $(shell echo ${WORK_DIR} | wc -c )  -gt 100 ]; then \
 	echo "scripts/wrapper.sh"; \
 fi)
-VIRTUALENV = $(shell if hash virtualenv2 &>/dev/null; then \
+VIRTUALENV = $(shell if hash virtualenv2 2>/dev/null; then \
 	echo "virtualenv2"; \
 else \
 	echo "virtualenv"; \
@@ -51,9 +51,9 @@ publish-docs:
 	git subtree push --prefix docs/_build/html origin gh-pages
 
 python-deps:
-	@if [[ -z "$(PYTHON_VERSION)" ]]; then echo "error: couldn't find a valid version of python installed"; false; fi
-	@if ! hash $(VIRTUALENV) &>/dev/null; then echo "error: couldn't find a valid version of virtualenv installed"; false; fi
-	if [[ ! -d venv ]]; then $(VIRTUALENV) --python=$(PYTHON_VERSION) venv; fi
+	@if [ -z "$(PYTHON_VERSION)" ]; then echo "error: couldn't find a valid version of python installed"; false; fi
+	@if ! hash $(VIRTUALENV) 2>/dev/null; then echo "error: couldn't find a valid version of virtualenv installed"; false; fi
+	if [ ! -d venv ]; then $(VIRTUALENV) --python=$(PYTHON_VERSION) venv; fi
 	$(WRAPPER) venv/bin/pip install --upgrade pip
 	$(WRAPPER) venv/bin/pip install --upgrade -r requirements.txt
 	$(WRAPPER) venv/bin/pip install -e .
