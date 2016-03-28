@@ -1,0 +1,7 @@
+# Install AerisCloud on the given computer
+- hosts: localhost
+  gather_facts: true
+  roles:
+    - common
+    - vagrant
+    - env

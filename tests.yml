@@ -1,0 +1,5 @@
+roles: ansible/roles
+library: ansible/library
+plugins:
+  action: ansible/plugins/actions
+  filter: ansible/plugins/filters

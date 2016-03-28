@@ -1,0 +1,12 @@
+---
+galaxy_info:
+  author: Christophe Robin <crobin@nekoo.com>
+  description: Installs and update vagrant
+  company: Wizcorp K.K.
+  license: MIT
+  min_ansible_version: 1.2
+  platforms:
+    - name: Darwin
+  categories:
+    - development
+dependencies: []

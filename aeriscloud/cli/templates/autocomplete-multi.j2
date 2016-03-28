@@ -1,0 +1,23 @@
+_{{ name }}_completion() {
+    local cur prev flags cmds el cmd
+
+    COMPREPLY=()
+
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[${COMP_CWORD} - 1]}"
+    flags="{{ flags|join(' ') }}"
+    cmds="{{ cmds|join(' ') }}"
+
+    for el in ${COMP_WORDS[@]:{{ level }}}; do
+        [[ ${el} != -* ]] && cmd="${el}" && break
+    done
+
+    if type "_{{ name }}_${cmd}_completion" &> /dev/null && [[ "${cmd}" != "${cur}" ]]; then
+        _{{ name }}_${cmd}_completion
+    elif [[ ${cur} == -* ]]; then
+        COMPREPLY=( $(compgen -W "${flags}" -- ${cur}) )
+    else
+        COMPREPLY=( $(compgen -W "${cmds}" -- ${cur}) )
+    fi
+}
+

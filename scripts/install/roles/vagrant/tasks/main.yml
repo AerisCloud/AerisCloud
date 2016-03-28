@@ -1,0 +1,63 @@
+---
+# tasks file for vagrant
+- name: Set /etc dir for OSX
+  when: ansible_distribution == "MacOSX"
+  set_fact:
+    system_etc_dir: /private/etc
+    sudoers_owner_group: wheel
+
+- name: Check sudoers.d directory
+  sudo: yes
+  file:
+    path: "{{ system_etc_dir }}/sudoers.d"
+    owner: root
+    group: "{{ sudoers_owner_group }}"
+    mode: 0750
+    state: directory
+
+- name: Install sudoers file for vagrant NFS
+  sudo: yes
+  copy:
+    src: vagrant-nfs
+    dest: "{{ system_etc_dir }}/sudoers.d/vagrant-nfs"
+    mode: 0440
+    owner: root
+    group: "{{ sudoers_owner_group }}"
+
+- name: Clean old sudoers include line
+  sudo: yes
+  when: system_etc_dir != "/etc"
+  lineinfile:
+    dest: "{{ system_etc_dir }}/sudoers"
+    line: "#includedir /etc/sudoers.d"
+    state: absent
+    validate: "visudo -cf %s"
+
+- name: Enable sudoers file
+  sudo: yes
+  lineinfile:
+    dest: "{{ system_etc_dir }}/sudoers"
+    line: "#includedir {{ system_etc_dir }}/sudoers.d"
+    validate: "visudo -cf %s"
+
+- name: Check if Vagrant is installed
+  shell: >
+    which vagrant 2>&1 >/dev/null
+  register: vagrant_installed
+
+- fail: "Vagrant must be installed"
+  when: vagrant_installed|failed
+
+- name: Retrieve installed plugins
+  shell: >
+    vagrant plugin list | cut -d ' ' -f 1
+  register: vagrant_plugins
+  changed_when: False
+
+- name: Install vagrant plugins
+  shell: >
+    vagrant plugin install {{ item }}
+  with_items:
+    - vagrant-persistent-storage
+    - vagrant-triggers
+  when: item not in vagrant_plugins.stdout_lines

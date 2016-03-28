@@ -1,0 +1,5 @@
+---
+# tasks file for setting up the environment
+- include: arch.yml
+  when: ansible_pkg_mgr == "pacman"
+  tags: common

@@ -1,0 +1,210 @@
+#
+# The name of your project. Please make sure
+# it matches the repository name
+#
+project_name: {{ config.project_name }}
+
+#
+# The organization which contains the playbook
+# you want to use to provision the boxes of this project
+#
+{%- if config.organization %}
+organization: {{ config.organization }}
+{% else %}
+# organization: AerisCloud
+{% endif %}
+
+#
+# A unique ID provided by
+# server operations
+#
+# ** DO NOT PICK A RANDOM ID **
+#
+id: {{ config.id }}
+
+#
+# The services your project will need.
+#
+# By default, the following
+# services are automatically included
+#
+#    - loadbalancer
+#    - web
+#
+# To see what services are currently
+# available for install:
+#
+# ```bash
+# grep -r hosts ${AERISCLOUD_PATH}/ansible/env_production.yml | grep -v "\!" | cut -d":" -f3 | grep -v all | sort | uniq
+# ```
+#
+{%- if config.services | length > 0 %}
+services:
+{%- for service in config.services %}
+  - {{ service }}
+{%- endfor -%}
+{% else %}
+# services:
+#   - xtradb
+#   - couchbase
+#
+{% endif %}
+
+#
+# The boxes you wish to use for your project
+# They should use the same operating system as your production systems
+#
+# Each box can be configured:
+#
+#   basebox: the base vagrant box you wish to use (e.g. what OS, what version)
+#   cpu: how many CPU do you want to start this machine with?
+#   ram: how much RAM do you want to start this machine with?
+#
+# To see what boxes are available:
+#
+# Atlas: https://atlas.hashicorp.com/boxes/search?provider=virtualbox
+#
+# If your organization has a custom box repository, you can also run:
+#
+# ```bash
+# aeris box list
+# ```
+#
+{%- if config.boxes and config.boxes | length > 0 %}
+boxes:
+{%- for box in config.boxes %}
+  - name: {{ box['name'] }}
+    basebox: {{ box['basebox'] }}
+    cpu: {{ box['cpu'] }}
+    ram: {{ box['ram'] }}
+{%- endfor -%}
+{% else %}
+#boxes:
+#  - name: centos
+#    basebox: chef/centos-6.5
+#    cpu: 2
+#    ram: 1024
+#
+#  - name: debian
+#    basebox: chef/debian-7.6
+#    cpu: 2
+#    ram: 1024
+#
+{% endif %}
+
+{%- if config.basebox_url %}
+# If any of the box is not an Atlas Box, switch to this basebox URL
+basebox_url: {{ config.basebox_url }}
+{% endif %}
+
+#
+# Mounts
+#
+# Mounts can be used to mount additional folders available on
+# the local system onto the remote box.
+#
+# Note: You CANNOT have shared folders one into each other across
+# ALL your projects. For instance, trying to share both:
+#
+# ~/Sources/mylib
+# ~/Sources/mylib/somedir
+#
+# Would make your NFS fail.
+#
+# mounts:
+#   mylib: ../mylib
+#   .vim: ~/.vim
+#
+
+#
+# Watch
+#
+# During development, watch some files and
+# execute some actions whenever they change
+#
+# It is possible to get very granular here: for instance,
+# you may decide to restart your app when some files changes,
+# or to automatically make all when .git changes, etc...
+#
+# Patterns are matched against the absolute path of a given
+# file. Because of this, it is not possible to specify patterns
+# based on the relative path, e.g. ./www/* and so on.
+#
+{% if config.watch -%}
+{{ config.watch|yaml('watch') }}
+{% else -%}
+watch:
+  directories:
+  - lib
+  patterns:
+  - '*.js'
+  - '*.css'
+  ignores:
+  - '*.sock'
+  - '*/build/*'
+  - '*/www/*'
+  - '*/assets/*'
+  run: make run
+{% endif %}
+
+#
+# Browse
+#
+# Here you can define endpoints which
+# can be access to by running
+#
+# aeris browse [endpointName]
+# aeris browse myproject-myenv [endpointName]
+#
+
+# browse:
+#  cms: /apps/cms
+#  api: /apps/api
+#
+
+#
+# Activate debugging of the provisioning process
+#
+# See http://docs.vagrantup.com/v2/provisioning/ansible.html
+#
+# For more details on how to configure this variable
+#
+# debug: "vvv"
+
+#
+# Rsync
+#
+# To obtain better performance,
+# instead of using NFS to mount your source code into your box,
+# you can use Rsync to synchronize file between your computer and your box.
+#
+# Warning: With Rsync, your files are not synchronized in real time,
+# but only when you use some aeris commands.
+# Some of them are: aeris make, aeris git, aeris watch.
+#
+# use_rsync: yes
+
+#
+# Rsync ignore
+#
+# Every time you will start your box or run one of the command which will
+# synchronize your files, it will send the files from your computer to the box.
+# But if some files don't exist on your computer, like build directory,
+# it will remove them.
+# With the rsync_ignore option, you can list the directories updated by your
+# application, you don't want to manage via rsync.
+#
+# rsync_ignores:
+#   - build
+#   - filevaults
+
+#
+# Extra configuration variables
+#
+# These variables will be passed down to ansible's provisioning
+# script. Anything configurable in the roles can be configured for
+# development here
+#{% if not config.timezone %}
+timezone: Asia/Tokyo{%else %}
+{{ config.timezone|yaml('timezone') }}{% endif %}
+{% if config.extra() %}{{ config.extra()|yaml() }}{% endif %}

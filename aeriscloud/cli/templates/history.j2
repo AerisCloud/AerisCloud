@@ -1,0 +1,25 @@
+{% for entry in history -%}
+{{bold}}{{fg.blue}}Date:{{reset}} {{entry.date.format('ddd, DD MMM YYYY HH:mm:ss')}} ({{fg.yellow}}{{entry.date.humanize()}}{{reset}}) [{{bold}}{% if entry.failed_at %}{{fg.red}}FAILED{% else %}{{fg.green}}SUCCEEDED{% endif %}{{reset}}]
+{%- if not quiet %}
+    {{bold}}{{fg.blue}}AerisCloud version:{{reset}} {{fg.green}}{{entry.aeriscloud_version}}{{reset}}{% if 'aeriscloud_commit' in entry %} ({{fg.cyan}}{{entry.aeriscloud_commit[:8]}}{{reset}}){% endif %}
+    {{bold}}{{fg.blue}}Ansible version:{{reset}}
+        {{bold}}ansible{{reset}} {{fg.green}}{{entry.ansible_version.version}}{{reset}}{{reset}}
+        {%- for line in entry.ansible_version.extra %}
+        {{line}}
+        {%- endfor %}
+    {{bold}}{{fg.blue}}Applied roles:{{reset}}
+        {{fg.yellow}}{{', '.join(entry.roles)}}
+    {%- if entry.failed_at %}
+    {{bold}}{{fg.blue}}Failed at:
+        {%- for box, result in entry.failed_at.iteritems() %}
+        {{bold}}{{fg.magenta}}{{box}}{{reset}}: {{fg.red}}{{result}}
+        {%- endfor %}
+    {%- endif %}
+    {{bold}}{{fg.blue}}Role statistics:{{reset}}
+    {%- for box in entry.stats %}
+        {{bold}}{{fg.magenta}}{{box}}{{reset}}: {{bold}}unreachable={{entry.stats[box].unreachable}}{{reset}} {{fg.cyan}}skipped={{entry.stats[box].skipped}} {{fg.green}}ok={{entry.stats[box].ok}} {{fg.red}}failures={{entry.stats[box].failures}} {{fg.yellow}}changed={{entry.stats[box].changed}}
+    {%- endfor %}
+{% endif %}
+{% else -%}
+{{fg.yellow}}warning: no history entry found.
+{% endfor %}{{reset}}

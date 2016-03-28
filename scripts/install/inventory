@@ -1,0 +1,7 @@
+[localhost]
+localhost ansible_connection=local
+
+[localhost:vars]
+ansible_python_interpreter = "/usr/bin/env python2.7"
+vagrant_version = "1.7.4"
+virtualbox_version = "5.0.12"

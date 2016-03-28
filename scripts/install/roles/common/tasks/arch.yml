@@ -1,0 +1,6 @@
+---
+- name: "Update package database"
+  sudo: yes
+  pacman: update_cache=yes
+
+

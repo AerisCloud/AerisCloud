@@ -1,0 +1,14 @@
+{{ bold }}AerisCloud version:{{ reset }} {{ fg.green }}{{ aeriscloud.version }}{{ reset }}{% if aeriscloud.revision %} ({{ fg.cyan }}{{ aeriscloud.revision }}{{ reset }}) on {{ fg.yellow }}{{ aeriscloud.branch }}{% endif %}{{ reset }}
+{{ bold }}Ansible version:{{ reset }}    {{ fg.green }}{{ ansible.version }}{{ reset }}
+{{ bold }}Vagrant version:{{ reset }}    {% if vagrant.version %}{{ fg.green }}{{ vagrant.version }}{% else %}{{ fg.red }}Missing{% endif %}{{ reset }}
+{{ bold }}VirtualBox version:{{ reset }} {% if virtualbox.version %}{{ fg.green }}{{ virtualbox.version }}{% else %}{{ fg.red }}Missing{% endif %}{{ reset }}
+{% if osx -%}
+{{ bold }}Operating system:{{ reset }}   {{ osx.name }} {{ fg.green }}{{ osx.version }}{{ reset }} (build {{ fg.cyan }}{{ osx.build }}{{ reset }})
+{%- elif linux -%}
+{{ bold }}Operating system:{{ reset }}   {{ fg.green }}{%if linux.pretty_name %}{{ linux.pretty_name }}{% elif linux.name %}{{ linux.name }}{% elif linux.version %}{{ linux.version }}{% else %}{{ fg.yellow }}Unknown Linux{% endif %}{{ reset }}{% if linux.home_url %} ({{ fg.cyan }}{{ linux.home_url }}{{ reset }}){% endif %}
+{%- endif %}{%  if kernel %}
+{{ bold }}Kernel version:{{ reset }}     {{ fg.green }}{{ kernel.version }}{{ reset }}
+{%- endif %}
+{{ bold }}Ruby version:{{ reset }}       {% if ruby.version %}{{ fg.green }}{{ ruby.version }}{{ reset }} ({{ fg.cyan }}{{ ruby.revision }}{{ reset }}){% else %}{{ fg.red }}Missing{% endif %}{{ reset }}
+{{ bold }}Python version:{{ reset }}     {{ fg.green }}{{ python.version }}{{ reset }}
+{{ bold }}Git version:{{ reset }}        {{ fg.green }}{{ git.version }}{{ reset }}

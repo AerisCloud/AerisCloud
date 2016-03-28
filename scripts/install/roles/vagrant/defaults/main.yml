@@ -1,0 +1,2 @@
+system_etc_dir: /etc
+sudoers_owner_group: root

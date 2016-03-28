@@ -1,0 +1,16 @@
+{% if box.services() %}
+{{fg.green}}Available services:
+{% for service in box.services() %}
+    {{fg.cyan}}{{service.name}} {{reset}}@ {{fg.magenta}}
+    {%- if service.protocol -%}
+        {{ service.protocol }}://
+    {%- else -%}
+        {%- if service.path -%}
+            http://
+        {%- else -%}
+            tcp://
+        {%- endif -%}
+    {%- endif -%}
+    {{box.ip()}}:{{service.port}}{{service.path}}
+{%- endfor %}{{reset}}
+{% endif %}

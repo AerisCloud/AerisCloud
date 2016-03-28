@@ -1,0 +1,13 @@
+---
+galaxy_info:
+  author: Christophe Robin <crobin@nekoo.com>
+  description: Setup environment for AerisCloud
+  company: Wizcorp K.K.
+  license: MIT
+  min_ansible_version: 1.2
+  platforms:
+    - name: Darwin
+  categories:
+    - packaging
+    - system
+dependencies: []

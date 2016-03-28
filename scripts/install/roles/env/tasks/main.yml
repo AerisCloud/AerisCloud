@@ -1,0 +1,42 @@
+---
+- name: "Check for zshrc"
+  file:
+    path: "{{ ansible_env.HOME }}/.zshrc"
+    state: touch
+    mode: 0644
+  when: '"zsh" in ansible_env.SHELL'
+
+- name: "Remove old versions AerisCloud (zsh)"
+  lineinfile:
+    dest: "{{ ansible_env.HOME }}/.zshrc"
+    state: absent
+    regexp: "~/.AerisCloud"
+  when: '"zsh" in ansible_env.SHELL'
+
+- name: "Install new version (zsh)"
+  lineinfile:
+    dest: "{{ ansible_env.HOME }}/.zshrc"
+    line: "source /opt/aeriscloud/scripts/env.sh"
+  when: '"zsh" in ansible_env.SHELL'
+
+- name: "Check if bash_profile exists"
+  stat: path="{{ ansible_env.HOME }}/.bash_profile"
+  register: bashProfile
+
+- name: "Create bash_profile if there isn't one already"
+  file:
+    path: "{{ ansible_env.HOME }}/.bash_profile"
+    state: touch
+    mode: 0644
+  when: 'bashProfile.stat.exists == False'
+
+- name: "Remove old versions AerisCloud (bash)"
+  lineinfile:
+    dest: "{{ ansible_env.HOME }}/.bash_profile"
+    state: absent
+    regexp: "~/.AerisCloud"
+
+- name: "Install new version (bash)"
+  lineinfile:
+    dest: "{{ ansible_env.HOME }}/.bash_profile"
+    line: "source /opt/aeriscloud/scripts/env.sh"

@@ -1,0 +1,46 @@
+_{{ name }}_completion() {
+    local cur prev projects flags
+
+    COMPREPLY=()
+
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[${COMP_CWORD} - 1]}"
+    flags="{{ flags|join(' ') }}"
+
+    local el pel pro box pos
+    pos=$(( ${COMP_CWORD} - {{ level }} ))
+    for el in ${COMP_WORDS[@]:{{ level }}}; do
+        # find project position
+        [[ "${pel}" == "-p" ]] || [[ "${pel}" == "--project" ]] && \
+            pro="${el}"
+        # find box position
+        [[ "${pel}" == "-b" ]] || [[ "${pel}" == "--box" ]] && \
+            box="${el}"
+        # find arg position (only support -p and -b for now)
+        ([[ ${pel} == -* ]] && [[ ${pel} =~ (-p|-b) ]]) || \
+        [[ ${el} == -* ]] && pos=$(( pos - 1 ))
+        pel="${el}"
+    done
+
+    # shouldnt happen but never too safe
+    [[ $pos < 0 ]] && pos=0
+
+    if [[ ${cur} == -* ]]; then
+        COMPREPLY=( $(compgen -W "${flags}" -- ${cur}) )
+    elif [ "${prev}" == "--project" ] || [ "${prev}" == "-p" ]; then
+        COMPREPLY=( $(compgen -W "$( {{ complete_cmd }} projects )" -- ${cur}) )
+    elif [ "${prev}" == "--box" ] || [ "${prev}" == "-b" ]; then
+        COMPREPLY=( $(compgen -W "$( {{ complete_cmd }} boxes ${pro} )" -- ${cur}) )
+    elif [ "${prev}" == "--organization" ]; then
+        COMPREPLY=( $(compgen -W "$( {{ complete_cmd }} organization )" -- ${cur}) )
+    {% if param %}else
+        COMPREPLY=( $(compgen -W "$( {{ complete_cmd }} param {{ param }} "${pro}" "${box}")" -- ${cur}) )
+    {% elif params %}else
+        local params
+        params=({{ params|join(' ') }})
+        [[ $pos > ${{ '{' }}#params[@]} ]] && return
+        COMPREPLY=( $(compgen -W "$( {{ complete_cmd }} param ${params[$pos]} ${COMP_WORDS[@]:{{ level }}})" -- ${cur}) )
+    {% endif -%}
+    fi
+}
+

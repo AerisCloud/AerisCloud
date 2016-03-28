@@ -1,0 +1,116 @@
+#
+# Notes:
+# -------
+#
+# This playbook essentially:
+#
+# 1. Creates a dynamic inventory.
+#    It adds the dev machine to all the groups
+#    which installs certain roles
+#
+# 2. Loads the production playbook, and plays it normally
+#
+# TODO:
+#
+# * This playbook seems to expect at least one extra role.
+#   It should be possible to specify none
+#
+- name: "Dynamically add the machine to the inventory"
+  hosts: all
+  gather_facts: true
+  sudo: true
+  user: vagrant
+  tasks:
+     - name: "Adding localhost"
+       add_host: >
+         name="localhost"
+         ansible_ssh_host="127.0.0.1"
+         groups="localhost"
+       tags:
+         - inventory
+
+     - name: "Adding host"
+       add_host: >
+         name="{{ inventory_hostname }}"
+         user="vagrant"
+         ansible_ssh_user="vagrant"
+         ansible_ssh_host="{{ ansible_eth1["ipv4"]["address"] }}"
+         ansible_ssh_port=22
+         groups="{{ services | default([]) | union(['dev','loadbalancer','web']) | join(',') }}"
+       tags:
+         - inventory
+     #
+     # Setting some facts
+     #
+     # Remember, you can override pretty much
+     # any variables specified here by putting
+     # a different
+     #
+     - name: "Setting host's facts"
+       set_fact:
+         username: vagrant
+         #
+         # Networking
+         #
+         private_interface: eth1
+         private_network: 172.16.0.0
+         private_netmask: 255.255.0.0
+         server_hostname: "{{ inventory_hostname }}"
+         #
+         # web-related configuration
+         #
+         web_cluster_name: web
+         #
+         # Couchbase related configuration
+         #
+         couchbase_cluster_name: couchbase
+         couchbase_bootstrap: "{{ inventory_hostname }}"
+         couchbase_admin_user: admin
+         couchbase_admin_password: aeriscloud
+
+         # ram quota for the cluster (512MB)
+         cluster_init_ramsize: 512
+
+         # bucket and replicas (512MB)
+         bucket_name: "{{ project_name }}"
+         bucket_ram_quota: 512
+         num_replicas: 0
+
+         #
+         # XtraDB configuration
+         #
+         xtradb_cluster_name: xtradb
+         xtradb_bootstrap: "{{ inventory_hostname }}"
+         xtradb_restore_use_dump: yes
+         root_password: aeriscloud
+         server_id: 1
+
+         #
+         # Elasticsearch configuration
+         #
+         elasticsearch_cluster_name: "elasticsearch"
+
+         #
+         # Zookeeper configuration
+         zookeeper_cluster_name: zookeeper
+         zoo_id: 1
+
+         #
+         # Project-related information
+         #
+         project_dir: "/home/vagrant/{{ project_name }}"
+         project_user: "vagrant"
+         project_environment: "development"
+       tags:
+         - inventory
+
+- name: "Group machine by OS"
+  hosts: all:!localhost
+  tasks:
+    - group_by: >
+        key={{ ansible_distribution }}
+      tags:
+        - inventory
+
+- name: "Loading the requested job..."
+  include: "{{job_file}}"
