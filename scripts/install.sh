@@ -432,7 +432,7 @@ fi
 
 step "Running ansible playbook"
 pushd "${INSTALL_DIR}/scripts/install" &>/dev/null
-step_run_prompt "${INSTALL_DIR}/venv/bin/ansible-playbook" --ask-sudo-pass -i inventory --connection=local install.yml
+step_run_prompt "${INSTALL_DIR}/venv/bin/ansible-playbook" --ask-sudo-pass -i inventory --connection=local --extra-vars="install_dir=${INSTALL_DIR}" install.yml
 popd &>/dev/null
 step_success
 

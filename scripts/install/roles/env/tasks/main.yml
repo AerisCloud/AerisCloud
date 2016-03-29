@@ -16,7 +16,7 @@
 - name: "Install new version (zsh)"
   lineinfile:
     dest: "{{ ansible_env.HOME }}/.zshrc"
-    line: "source /opt/aeriscloud/scripts/env.sh"
+    line: "source {{ install_dir }}/scripts/env.sh"
   when: '"zsh" in ansible_env.SHELL'
 
 - name: "Check if bash_profile exists"
@@ -39,4 +39,4 @@
 - name: "Install new version (bash)"
   lineinfile:
     dest: "{{ ansible_env.HOME }}/.bash_profile"
-    line: "source /opt/aeriscloud/scripts/env.sh"
+    line: "source {{ install_dir }}/scripts/env.sh"
