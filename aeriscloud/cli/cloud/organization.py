@@ -161,7 +161,8 @@ def list():
 
 @cli.command(cls=Command)
 @click.argument('name')
-def init(name):
+@click.argument('repository', required=False)
+def init(name, repository):
     """
     Initialize a new organization.
     """
@@ -196,6 +197,9 @@ def init(name):
     success("The %s organization has been created." % name)
 
     run_galaxy_install(name)
+
+    if repository:
+        vgit("remote", "add", "origin", repository)
 
 
 @cli.command(cls=Command)
