@@ -6,22 +6,93 @@ This folder contains the rules used by [ansible-lint](https://github.com/willtha
 Installation
 ------------
 
-[ansible-lint](https://github.com/willthames/ansible-lint), which is a separate  repository, will be installed by the AerisCloud install script in `~/.AerisCloud/ansible-lint`.
+[ansible-lint](https://github.com/willthames/ansible-lint), which is a separate repository, will be installed with AerisCloud in the *virtualenv*.
 
+You can run `aeris test` to run `ansible-lint` against all the playbooks of your AerisCloud organizations.
 
-A pre-commit git hook will be installed too.
-It will be run before you make a commit.
-It will check the syntax of your roles to help you to follow the [guidelines](../../docs/contributors/guidelines.md).
+Recommended practices for writing roles
+---------------------------------------------
 
-Usage
------
+* These guidelines are in extension of Ansible
+  [Best Practices](http://docs.ansible.com/ansible/playbooks_best_practices.html).
+  Please refer to them when in doubt.
+* Indent: 2 space. 4 space should be used in script, shell, or raw commands.
 
+### Roles
+
+#### `README.md`
+
+**Must** contain:
+
+* Description of what this role offers
+* Documentation of all the configuration variables
+* Example entry in an inventory
+
+#### `meta/main.yml`
+
+The supported platforms **must** be indicated.
+
+### Tasks
+
+#### Structure
+
+All tasks **must**:
+
+* Have a descriptive name, which explains what the task will be doing
+* When using variables, use spaces between the variable name and
+  the opening/closing brackets
+* Actions with arguments must be entered in multiline mode
+* Use shell for any command execution, and use multiline (However the shell module should be avoided as much as possible).
+
+General example:
+
+```yaml
+- name: "Ensure Couchbase is running, and starts on boot"
+  service: >
+    name=couchbase-server
+    state=started
+    enabled=yes
+  tags:
+    - couchbase
 ```
-ansible-lint -r ansible/rules ansible/env_production.yml
+
+Example (with shell, running a one-liner):
+
+```yaml
+- name: "Add nodes to the cluster"
+  shell: |
+    {{ couchbase_cmd }} server-add \
+      -c {{ hostvars[bootstrap]['ansible_' + private_interface]['ipv4']['address'] }}:8091 \
+      -u {{ admin_user }} \
+      -p {{ admin_password }} \
+      --server-add={{ hostvars[inventory_hostname]['ansible_' + private_interface]['ipv4']['address'] }}:8091 \
+      --server-add-username={{ admin_user }} \
+      --server-add-password={{ admin_password }}
+  when: is_member.rc != 0
+  tags:
+    - couchbase
+    - bootstrap
 ```
+
+Example with an inline python script - notice the > change to a |;
+refer to [YAML documentation for more details](http://www.yaml.org/spec/1.2/spec.html) (TL;DR: check
+[this StackOverflow question](http://stackoverflow.com/questions/3790454/in-yaml-how-do-i-break-a-string-over-multiple-lines))
+
+#### Tags
+
+All task **must** be tagged in the following fashion:
+
+* With the **name of the role**;
+* With **repos** if this task involves preparing a package manager's repositories;
+* With **pkgs** if this task copy or installs any packages to a system;
+* With **firewall** if this task involves firewall configuration;
+* With **files** if this task involves copying a file (either from file or template);
+* With **sysctl** if this task uses the [`sysctl`](http://docs.ansible.com/sysctl_module.html) module.
+
+In cases where more than one rule apply (for instance, most configs includes files), always use both tags.
 
 See also
 --------
 
 * [ansible-lint repo on Github](https://github.com/willthames/ansible-lint)
-* [AerisCloud development guidelines](../../docs/contributors/guidelines.md)
+* [Ansible Best Practices](http://docs.ansible.com/ansible/playbooks_best_practices.html)
