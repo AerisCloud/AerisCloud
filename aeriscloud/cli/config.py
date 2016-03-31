@@ -4,6 +4,7 @@ import re
 import sys
 
 from click.exceptions import Abort
+from github3 import GitHubError
 from requests.exceptions import HTTPError
 
 from .prompt import AerisCompletableList, AerisPrompt
@@ -129,6 +130,20 @@ Please enter a valid organization.''' % organization)
     config.set('github', 'organizations', ','.join(org_compl_list.selected))
 
 
+def _try_setup_github():
+    try:
+        gh = Github(_ask_credentials=_github_ask_credentials,
+                    _ask_2fa=_github_ask_2fa)
+        _setup_github_orgs(gh)
+    except GitHubError as e:
+        if e.code == 401:
+            _error('error: %s' % e.message)
+            raise e
+        _fatal('error: %s' % e.message)
+    except BaseException as e:
+        _fatal('error: %s' % e.message)
+
+
 def _setup_github():
     if (config.has('github', 'enabled') and
             config.get('github', 'enabled') == 'false'):
@@ -145,12 +160,13 @@ def _setup_github():
 
     config.set('github', 'enabled', 'true')
 
-    try:
-        gh = Github(_ask_credentials=_github_ask_credentials,
-                    _ask_2fa=_github_ask_2fa)
-        _setup_github_orgs(gh)
-    except BaseException as e:
-        _fatal('error: %s' % e.message)
+    for i in range(0, 3):
+        try:
+            _try_setup_github()
+            break
+        except GitHubError:
+            pass
+    else:
         sys.exit(1)
 
 
