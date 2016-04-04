@@ -39,6 +39,7 @@ The supported platforms **must** be indicated.
 All tasks **must**:
 
 * Have a descriptive name, which explains what the task will be doing
+* Have tags as described in the [Tags](#Tags) section
 * When using variables, use spaces between the variable name and
   the opening/closing brackets
 * Actions with arguments must be entered in multiline mode
@@ -80,7 +81,7 @@ refer to [YAML documentation for more details](http://www.yaml.org/spec/1.2/spec
 
 #### Tags
 
-All task **must** be tagged in the following fashion:
+All tasks **must** be tagged in the following fashion:
 
 * With the **name of the role**;
 * With **repos** if this task involves preparing a package manager's repositories;
