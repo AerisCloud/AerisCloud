@@ -447,8 +447,7 @@ fi
 
 echo
 
-# Show the installed version of stuff, will also trigger the config assistant
-# if necessary
-"${INSTALL_DIR}/venv/bin/aeris" version
+# Show the installed version of stuff
+AC_NO_ASSISTANT=1 "${INSTALL_DIR}/venv/bin/aeris" version
 
 echo -e "\nInstallation finished successfully\n"
