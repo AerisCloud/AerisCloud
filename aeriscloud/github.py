@@ -44,7 +44,7 @@ class Github:
             note += ' #%d' % counter
 
         try:
-            auth = authorize(user, pwd, ['repo'], note=note,
+            auth = authorize(user, pwd, ['repo', 'read:org'], note=note,
                              two_factor_callback=self._ask_2fa)
             return auth.token
         except GitHubError as e:
@@ -58,7 +58,7 @@ class Github:
                                                         'pwd': pwd})
 
     def get_organizations(self):
-        return [org for org in self.user.iter_orgs()]
+        return [org for org in self.gh.iter_orgs()]
 
     def get_repo(self, name, fork=False):
         """
