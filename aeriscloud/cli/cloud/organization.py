@@ -166,7 +166,41 @@ def list():
 def init(name, repository):
     """
     Initialize a new organization.
-    """
+
+    The following usages are supported:
+
+        cloud init <name>
+
+    It will create a new AerisCloud organization locally.
+
+        cloud init <name> <git repository url>
+
+    \b
+It will create a new AerisCloud organization and set the origin remote to
+the specified url.
+
+    \b
+If the GitHub integration is enabled, you can also use the following
+commands:
+
+        cloud init <github organization name>
+
+    \b
+It will create a new AerisCloud organization and set the origin remote to
+git@github.com/<organization>/aeriscloud-organization.git
+
+        cloud init <github organization name>/<project name>
+
+    \b
+It will create a new AerisCloud organization and set the origin remote to
+git@github.com/<organization>/<project>-aeriscloud-organization.git
+
+        cloud init <github organization name>/<customer>/<project name>
+
+    \b
+It will create a new AerisCloud organization and set the origin remote to
+git@github.com/<organization>/<customer>-<project>-aeriscloud-organization.git
+"""
     if (not repository and
             config.has('github', 'enabled') and
             config.get('github', 'enabled') == 'true' and
