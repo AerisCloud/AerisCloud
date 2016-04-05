@@ -9,9 +9,10 @@ import tarfile
 from sh import git, curl, ErrorReturnCode, Command as shCommand
 
 from aeriscloud.cli.helpers import Command, info, fatal, success, move_shell_to
-from aeriscloud.ansible import get_organization_list, get_env_path,\
+from aeriscloud.ansible import get_organization_list, get_env_path, \
     organization_path
-from aeriscloud.config import aeriscloud_path
+from aeriscloud.config import config, aeriscloud_path
+from aeriscloud.github import Github
 
 
 @click.group()
@@ -165,7 +166,64 @@ def list():
 def init(name, repository):
     """
     Initialize a new organization.
-    """
+
+    The following usages are supported:
+
+        cloud init <name>
+
+    It will create a new AerisCloud organization locally.
+
+        cloud init <name> <git repository url>
+
+    \b
+It will create a new AerisCloud organization and set the origin remote to
+the specified url.
+
+    \b
+If the GitHub integration is enabled, you can also use the following
+commands:
+
+        cloud init <github organization name>
+
+    \b
+It will create a new AerisCloud organization and set the origin remote to
+git@github.com/<organization>/aeriscloud-organization.git
+
+        cloud init <github organization name>/<project name>
+
+    \b
+It will create a new AerisCloud organization and set the origin remote to
+git@github.com/<organization>/<project>-aeriscloud-organization.git
+
+        cloud init <github organization name>/<customer>/<project name>
+
+    \b
+It will create a new AerisCloud organization and set the origin remote to
+git@github.com/<organization>/<customer>-<project>-aeriscloud-organization.git
+"""
+    if (not repository and
+            config.has('github', 'enabled') and
+            config.get('github', 'enabled') == 'true' and
+            config.has('github', 'token')):
+        gh = Github()
+
+        if '/' in name:
+            split = name.split('/')
+            name = split[0]
+            repo_name = '-'.join(split[1:]) + "-aeriscloud-organization"
+        else:
+            repo_name = "aeriscloud-organization"
+
+        orgs = [org for org in gh.get_organizations()
+                if org.login.lower() == name.lower()]
+        if orgs:
+            repos = [repo.name for repo in orgs[0].iter_repos()
+                     if repo.name.lower() == repo_name.lower()]
+            if repos:
+                repository = "git@github.com:{org}/{repo}.git".format(
+                    org=name,
+                    repo=repo_name
+                )
 
     dest_path = get_env_path(name)
     if os.path.exists(dest_path):
@@ -184,7 +242,7 @@ def init(name, repository):
     tar = tarfile.open("%s/master.tar.gz" % dest_path, 'r:gz')
     members = [m for m in tar.getmembers() if '/' in m.name]
     for m in members:
-        m.name = m.name[m.name.find('/')+1:]
+        m.name = m.name[m.name.find('/') + 1:]
     tar.extractall(path=dest_path, members=members)
     tar.close()
 
