@@ -169,11 +169,11 @@ def init(name, repository):
 
     The following usages are supported:
 
-        cloud init <name>
+        cloud organization init <name>
 
     It will create a new AerisCloud organization locally.
 
-        cloud init <name> <git repository url>
+        cloud organization init <name> <git repository url>
 
     \b
 It will create a new AerisCloud organization and set the origin remote to
@@ -183,19 +183,19 @@ the specified url.
 If the GitHub integration is enabled, you can also use the following
 commands:
 
-        cloud init <github organization name>
+        cloud organization init <github organization name>
 
     \b
 It will create a new AerisCloud organization and set the origin remote to
 git@github.com/<organization>/aeriscloud-organization.git
 
-        cloud init <github organization name>/<project name>
+        cloud organization init <github organization name>/<project name>
 
     \b
 It will create a new AerisCloud organization and set the origin remote to
 git@github.com/<organization>/<project>-aeriscloud-organization.git
 
-        cloud init <github organization name>/<customer>/<project name>
+        cloud organization init <org name>/<customer>/<project name>
 
     \b
 It will create a new AerisCloud organization and set the origin remote to
