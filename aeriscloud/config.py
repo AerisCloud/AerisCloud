@@ -134,7 +134,7 @@ class Config(object):
                     return False
 
         if self._config.get('github', 'enabled') == 'true' and \
-                not self._config.has_option('github', 'token'):
+           not self._config.has_option('github', 'token'):
             return False
 
         # if no expose url, or expose url is set but no account
@@ -189,6 +189,12 @@ def expose_username():
 
 def expose_url():
     return config.get('aeris', 'url', default=None)
+
+
+def has_github_integration():
+    return config.has('github', 'enabled') and \
+           config.get('github', 'enabled') == 'true' and \
+           config.has('github', 'token')
 
 
 def verbosity(val=None):
