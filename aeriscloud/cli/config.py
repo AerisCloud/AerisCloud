@@ -108,7 +108,9 @@ by spaces.
                 click.echo('* %s' % click.style(org, fg='green'))
             else:
                 click.echo('* %s' % org)
-        click.echo('')
+        click.echo('''
+Select one or several organizations or press {0} to confirm.
+'''.format(click.style('Return', bold=True)))
 
         orgs_input = orgs_cli.get_input()
 
