@@ -198,7 +198,12 @@ git@github.com/<organization>/<project>-aeriscloud-organization.git
 It will create a new AerisCloud organization and set the origin remote to
 git@github.com/<organization>/<customer>-<project>-aeriscloud-organization.git
 """
-    dirname = name
+    dirname = '-'.join(name.split('/'))
+
+    dest_path = get_env_path(dirname)
+    if os.path.exists(dest_path):
+        fatal("The organization %s already exists." % dirname)
+
     # If remote is not specified
     if not repository:
         # If GH integration is enabled
@@ -209,7 +214,6 @@ git@github.com/<organization>/<customer>-<project>-aeriscloud-organization.git
                 split = name.split('/')
                 name = split[0]
                 repo_name = '-'.join(split[1:]) + "-aeriscloud-organization"
-                dirname = '-'.join(split)
             else:
                 repo_name = "aeriscloud-organization"
 
@@ -246,10 +250,6 @@ You can create a new repo at the following address: https://github.com/new."""
         else:
             fatal("You need to specify a repository URL or enable the GitHub "
                   "integration in AerisCloud.")
-
-    dest_path = get_env_path(dirname)
-    if os.path.exists(dest_path):
-        fatal("The organization %s already exists." % dirname)
 
     archive_url = "https://github.com/AerisCloud/sample-organization/" \
                   "archive/master.tar.gz"
