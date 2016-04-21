@@ -41,7 +41,7 @@
   <div class="section" id="configuration">
 <h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
 <p>AerisCloud comes with several features that are available only through the
-<code class="docutils literal"><span class="pre">config</span></code> command in <code class="docutils literal"><span class="pre">aeris</span></code> (see also <a class="reference internal" href="../commands/aeris.html#aeris-config"><span>aeris config</span></a>). The
+<code class="docutils literal"><span class="pre">config</span></code> command in <code class="docutils literal"><span class="pre">aeris</span></code> (see also <a class="reference internal" href="../commands/aeris.html#aeris-config"><span class="std std-ref">aeris config</span></a>). The
 configuration file can be found in the config folder of your operating system
 (<code class="docutils literal"><span class="pre">~/.config/AerisCloud</span></code> for Linux and <code class="docutils literal"><span class="pre">~/Library/Application</span> <span class="pre">Support/AerisCloud</span></code>
 for OSX) under the name <code class="docutils literal"><span class="pre">config.ini</span></code>.</p>
@@ -51,26 +51,26 @@ for OSX) under the name <code class="docutils literal"><span class="pre">config.
 <div class="section" id="config-projects-path">
 <span id="id1"></span><h3><code class="docutils literal"><span class="pre">config.projects_path</span></code><a class="headerlink" href="#config-projects-path" title="Permalink to this headline">¶</a></h3>
 <p>Contains the path to the folder where projects are held and searched for when
-running the <a class="reference internal" href="../commands/aeris.html#aeris-fetch"><span>aeris fetch</span></a> or <a class="reference internal" href="../commands/aeris.html#aeris-goto"><span>aeris goto</span></a> commands, it is also used
+running the <a class="reference internal" href="../commands/aeris.html#aeris-fetch"><span class="std std-ref">aeris fetch</span></a> or <a class="reference internal" href="../commands/aeris.html#aeris-goto"><span class="std std-ref">aeris goto</span></a> commands, it is also used
 when running the auto-completion scripts.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>config.projects_path = /home/user/AerisCloudProjects
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">config</span><span class="o">.</span><span class="n">projects_path</span> <span class="o">=</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">AerisCloudProjects</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="config-default-organization">
 <span id="id2"></span><h3><code class="docutils literal"><span class="pre">config.default_organization</span></code><a class="headerlink" href="#config-default-organization" title="Permalink to this headline">¶</a></h3>
 <p>The name of the default organization to use when searching for playbooks and
-roles, see <a class="reference internal" href="../commands/cloud.html#cloud-organization"><span>cloud organization</span></a>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">config</span><span class="o">.</span><span class="n">default_organization</span> <span class="o">=</span> <span class="n">aeriscloud</span>
+roles, see <a class="reference internal" href="../commands/cloud.html#cloud-organization"><span class="std std-ref">cloud organization</span></a>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">config</span><span class="o">.</span><span class="n">default_organization</span> <span class="o">=</span> <span class="n">aeriscloud</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="config-basebox-bucket">
 <span id="id3"></span><h3><code class="docutils literal"><span class="pre">config.basebox_bucket</span></code><a class="headerlink" href="#config-basebox-bucket" title="Permalink to this headline">¶</a></h3>
 <p>If your organization has it&#8217;s own basebox repository for Vagrant, it should be
-set here so that the <a class="reference internal" href="../commands/aeris.html#aeris-init"><span>aeris init</span></a> command might be able to set it in
-your projects. See <a class="reference internal" href="../commands/aeris.html#aeris-box"><span>aeris box</span></a></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>config.basebox_bucket = https://my-org.tld/baseboxes/meta
+set here so that the <a class="reference internal" href="../commands/aeris.html#aeris-init"><span class="std std-ref">aeris init</span></a> command might be able to set it in
+your projects. See <a class="reference internal" href="../commands/aeris.html#aeris-box"><span class="std std-ref">aeris box</span></a></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">config</span><span class="o">.</span><span class="n">basebox_bucket</span> <span class="o">=</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">my</span><span class="o">-</span><span class="n">org</span><span class="o">.</span><span class="n">tld</span><span class="o">/</span><span class="n">baseboxes</span><span class="o">/</span><span class="n">meta</span>
 </pre></div>
 </div>
 </div>
@@ -79,7 +79,7 @@ your projects. See <a class="reference internal" href="../commands/aeris.html#ae
 <p>AerisCloud can uses <a class="reference external" href="https://getsentry.com/welcome/">sentry</a> for logging application crashes and issues, if
 you wish to set this feature, you can set this configuration variable to the
 proper raven URL</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>config.raven = https://access_token@app.getsentry.com/project_id
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">config</span><span class="o">.</span><span class="n">raven</span> <span class="o">=</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">access_token</span><span class="nd">@app</span><span class="o">.</span><span class="n">getsentry</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">project_id</span>
 </pre></div>
 </div>
 </div>
@@ -87,12 +87,12 @@ proper raven URL</p>
 <div class="section" id="github">
 <h2>github<a class="headerlink" href="#github" title="Permalink to this headline">¶</a></h2>
 <p>GitHub integration allows you to automatically fork and fetch projects from
-GitHub using the command-line, see <a class="reference internal" href="../commands/aeris.html#aeris-fetch"><span>aeris fetch</span></a></p>
+GitHub using the command-line, see <a class="reference internal" href="../commands/aeris.html#aeris-fetch"><span class="std std-ref">aeris fetch</span></a></p>
 <div class="section" id="github-enabled">
 <span id="id5"></span><h3><code class="docutils literal"><span class="pre">github.enabled</span></code><a class="headerlink" href="#github-enabled" title="Permalink to this headline">¶</a></h3>
 <p>Enables Github integration when set to <strong>true</strong>, when enabled both <code class="docutils literal"><span class="pre">github.token</span></code>
 and <code class="docutils literal"><span class="pre">github.organizations</span></code> should be set.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">github</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">true</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">github</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">true</span>
 </pre></div>
 </div>
 </div>
@@ -100,14 +100,14 @@ and <code class="docutils literal"><span class="pre">github.organizations</span>
 <span id="id6"></span><h3><code class="docutils literal"><span class="pre">github.token</span></code><a class="headerlink" href="#github-token" title="Permalink to this headline">¶</a></h3>
 <p>A valid GitHub token generated via the <a class="reference external" href="https://github.com/settings/tokens">github tokens</a> page, only the <code class="docutils literal"><span class="pre">repo</span></code>
 scope is necessary.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>github.token = &lt;64-bytes string&gt;
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">github</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="o">&lt;</span><span class="mi">64</span><span class="o">-</span><span class="nb">bytes</span> <span class="n">string</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="github-organizations">
 <span id="id7"></span><h3><code class="docutils literal"><span class="pre">github.organizations</span></code><a class="headerlink" href="#github-organizations" title="Permalink to this headline">¶</a></h3>
 <p>A list of GitHub organizations, separated by commas.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">github</span><span class="o">.</span><span class="n">organizations</span> <span class="o">=</span> <span class="n">AerisCloud</span><span class="p">,</span><span class="n">Wizcorp</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">github</span><span class="o">.</span><span class="n">organizations</span> <span class="o">=</span> <span class="n">AerisCloud</span><span class="p">,</span><span class="n">Wizcorp</span>
 </pre></div>
 </div>
 </div>
@@ -120,21 +120,21 @@ easy way thanks to direct integration with AerisCloud.</p>
 <div class="section" id="aeris-url">
 <span id="id8"></span><h3><code class="docutils literal"><span class="pre">aeris.url</span></code><a class="headerlink" href="#aeris-url" title="Permalink to this headline">¶</a></h3>
 <p>The url to your local <code class="docutils literal"><span class="pre">aeris.cd</span></code> instance.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">aeris</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">aeris</span><span class="o">.</span><span class="n">cd</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">aeris</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">aeris</span><span class="o">.</span><span class="n">cd</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="aeris-email">
 <span id="id9"></span><h3><code class="docutils literal"><span class="pre">aeris.email</span></code><a class="headerlink" href="#aeris-email" title="Permalink to this headline">¶</a></h3>
 <p>The email used to signup on your <code class="docutils literal"><span class="pre">aeris.cd</span></code> instance.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>aeris.email = myself@my-org.tld
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">aeris</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">myself</span><span class="nd">@my</span><span class="o">-</span><span class="n">org</span><span class="o">.</span><span class="n">tld</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="aeris-token">
 <span id="id10"></span><h3><code class="docutils literal"><span class="pre">aeris.token</span></code><a class="headerlink" href="#aeris-token" title="Permalink to this headline">¶</a></h3>
 <p>An access token generated by <code class="docutils literal"><span class="pre">aeris.cd</span></code>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>aeris.token = &lt;40-bytes string&gt;
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">aeris</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="o">&lt;</span><span class="mi">40</span><span class="o">-</span><span class="nb">bytes</span> <span class="n">string</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 </div>
@@ -199,9 +199,6 @@ easy way thanks to direct integration with AerisCloud.</p>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -212,7 +209,7 @@ easy way thanks to direct integration with AerisCloud.</p>
       &copy;2016, Wizcorp Inc.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |

@@ -43,33 +43,33 @@
 <p>As a Server Operator your main job is to take a project and build the
 infrastructure, configuration to deploy it quickly and efficiently to
 production. Most of the operations a server operator will run are done
-with the <a class="reference internal" href="../commands/cloud.html"><em>Cloud Command</em></a>.</p>
+with the <a class="reference internal" href="../commands/cloud.html"><span class="doc">Cloud Command</span></a>.</p>
 <div class="section" id="managing-roles-and-playbooks">
 <h2>Managing Roles and Playbooks<a class="headerlink" href="#managing-roles-and-playbooks" title="Permalink to this headline">¶</a></h2>
-<p>This is a quick recap of what was already said in the <a class="reference internal" href="../getting-started.html"><em>Getting Started</em></a>
+<p>This is a quick recap of what was already said in the <a class="reference internal" href="../getting-started.html"><span class="doc">Getting Started</span></a>
 documentation. Your roles and playbooks are stored in what we call
 <code class="docutils literal"><span class="pre">organizations</span></code>, those are git repositories unique per client/companies
 you are working with and allows for easy management of private ansible roles.</p>
 <p>If you didn&#8217;t create an organization yet, a brand new organization can be
 created by running the following command:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>cloud organization init my-org
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cloud</span> <span class="n">organization</span> <span class="n">init</span> <span class="n">my</span><span class="o">-</span><span class="n">org</span>
 </pre></div>
 </div>
 <p>You should be moved inside the organization&#8217;s folder and be ready to modify it
-for your needs, see <a class="reference internal" href="../organization.html"><em>Organization</em></a> for more details.</p>
+for your needs, see <a class="reference internal" href="../organization.html"><span class="doc">Organization</span></a> for more details.</p>
 </div>
 <div class="section" id="taking-inventory">
 <h2>Taking Inventory<a class="headerlink" href="#taking-inventory" title="Permalink to this headline">¶</a></h2>
 <p>If your company already has an inventory, installing it is as simple as running:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>cloud inventory install git@github.com:my-org/inventory.git
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cloud</span> <span class="n">inventory</span> <span class="n">install</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">my</span><span class="o">-</span><span class="n">org</span><span class="o">/</span><span class="n">inventory</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
 </div>
 <p>Any valid git repository will do. Updating all your inventories can be done by
-running <a class="reference internal" href="../commands/cloud.html#cloud-inventory-install"><span>cloud inventory install</span></a> without any repository.</p>
+running <a class="reference internal" href="../commands/cloud.html#cloud-inventory-install"><span class="std std-ref">cloud inventory install</span></a> without any repository.</p>
 <div class="section" id="creating-a-new-inventory">
 <h3>Creating a new inventory<a class="headerlink" href="#creating-a-new-inventory" title="Permalink to this headline">¶</a></h3>
 <p>The first step with getting ready for production is to create an ansible
-inventory that can be used with the <a class="reference internal" href="../commands/cloud.html"><em>Cloud Command</em></a>:</p>
+inventory that can be used with the <a class="reference internal" href="../commands/cloud.html"><span class="doc">Cloud Command</span></a>:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Move to the inventory folder</span>
 cloud inventory goto
 <span class="c1"># Create a new folder for your inventory</span>
@@ -119,7 +119,7 @@ documentation about <a class="reference external" href="http://docs.ansible.com/
 <h2>Provisioning<a class="headerlink" href="#provisioning" title="Permalink to this headline">¶</a></h2>
 <p>Once your inventory, playbooks and roles are in tip-top shape, and your project
 is working, comes the time to provision your production or staging servers. For
-that the <a class="reference internal" href="../commands/cloud.html#cloud-provision"><span>cloud provision</span></a> command should be used, like so:</p>
+that the <a class="reference internal" href="../commands/cloud.html#cloud-provision"><span class="std std-ref">cloud provision</span></a> command should be used, like so:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Use the production playbook and provision only nodejs on the staging inventory</span>
 cloud provision my-org/production my-org/projectA/staging --limit<span class="o">=</span><span class="s2">&quot;nodejs&quot;</span>
 </pre></div>
@@ -133,7 +133,7 @@ the app, etc...).</p>
 <p>Jobs in AerisCloud are ultra-light playbooks that specialize in running small
 commands, ranging from dumping a database to managing the release process of a
 project.</p>
-<p>They are executed by running the <a class="reference internal" href="../commands/cloud.html#cloud-job"><span>cloud job</span></a> command:</p>
+<p>They are executed by running the <a class="reference internal" href="../commands/cloud.html#cloud-job"><span class="std std-ref">cloud job</span></a> command:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>cloud job <span class="o">[</span>JOB<span class="o">]</span> <span class="o">[</span>INVENTORY FILE<span class="o">]</span> <span class="o">[</span>EXTRA PARAMETERS<span class="o">]</span>
 </pre></div>
 </div>
@@ -217,9 +217,6 @@ of the file.</p>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -230,7 +227,7 @@ of the file.</p>
       &copy;2016, Wizcorp Inc.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
