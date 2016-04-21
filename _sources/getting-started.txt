@@ -30,12 +30,8 @@ the AerisCloud repository where you want it to be installed (something like
 Then run ``make install`` to install all the necessary python dependencies in the
 current folder and generate the auto-completion.
 
-Finally add the following line in you ``~/.bash_profile``::
-
-  source /path/to/aeriscloud/scripts/env.sh
-
 When updating, just enter the AerisCloud folder, then just pull the latest
-version before running ``make``.
+version before running ``make install``.
 
 Setting up AerisCloud
 ---------------------

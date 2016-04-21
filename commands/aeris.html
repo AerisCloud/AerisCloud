@@ -49,41 +49,40 @@ a small subset of them.</p>
 <div class="section" id="aeris">
 <span id="command-aeris"></span><h2><code class="docutils literal"><span class="pre">aeris</span></code><a class="headerlink" href="#aeris" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris [OPTIONS] COMMAND [ARGS]...
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="n">COMMAND</span> <span class="p">[</span><span class="n">ARGS</span><span class="p">]</span><span class="o">...</span>
 
-  Manage your local development environments
+  <span class="n">Manage</span> <span class="n">your</span> <span class="n">local</span> <span class="n">development</span> <span class="n">environments</span>
 
-Options:
-  -v, --verbose    Make commands verbose, use multiple time for higher
-                   verbosity
-  --log-file TEXT  When using the verbose flag, redirects output to this
-                   file
-  -h, --help       Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">v</span><span class="p">,</span> <span class="o">--</span><span class="n">verbose</span>    <span class="n">Make</span> <span class="n">commands</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">use</span> <span class="n">multiple</span> <span class="n">time</span> <span class="k">for</span> <span class="n">higher</span>
+                   <span class="n">verbosity</span>
+  <span class="o">--</span><span class="n">log</span><span class="o">-</span><span class="n">file</span> <span class="n">TEXT</span>  <span class="n">When</span> <span class="n">using</span> <span class="n">the</span> <span class="n">verbose</span> <span class="n">flag</span><span class="p">,</span> <span class="n">redirects</span> <span class="n">output</span> <span class="n">to</span> <span class="n">this</span> <span class="n">file</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>       <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 
-Commands:
-  box        Manage base boxes
-  browse     Open an endpoint in your default browser
-  build      Build your native application
-  config     Get and set your AerisCloud options
-  destroy    Destroy a box
-  expose     Manage project exposition
-  fetch      Allows you to fetch a project from GitHub
-  git        Run a git command
-  goto       Goto a project&#39;s directory
-  halt       Halt a box, can be started back using up
-  history    Shows provisioning history for a box
-  init       Initialize a new AerisCloud project
-  job        Run a maintenance job in a box.
-  make       Run a make command
-  provision  Provision a box
-  ssh        Launch a ssh shell on the box
-  status     Query the status of boxes
-  suspend    Suspend a running box, see resume
-  sync       Sync data up or down
-  up         Starts the given box and provision it
-  update     Update AerisCloud
-  version    See the aeriscloud version information
-  watch      Sync files and restart your application upon...
+<span class="n">Commands</span><span class="p">:</span>
+  <span class="n">box</span>        <span class="n">Manage</span> <span class="n">base</span> <span class="n">boxes</span>
+  <span class="n">browse</span>     <span class="n">Open</span> <span class="n">an</span> <span class="n">endpoint</span> <span class="ow">in</span> <span class="n">your</span> <span class="n">default</span> <span class="n">browser</span>
+  <span class="n">build</span>      <span class="n">Build</span> <span class="n">your</span> <span class="n">native</span> <span class="n">application</span>
+  <span class="n">config</span>     <span class="n">Get</span> <span class="ow">and</span> <span class="nb">set</span> <span class="n">your</span> <span class="n">AerisCloud</span> <span class="n">options</span>
+  <span class="n">destroy</span>    <span class="n">Destroy</span> <span class="n">a</span> <span class="n">box</span>
+  <span class="n">expose</span>     <span class="n">Manage</span> <span class="n">project</span> <span class="n">exposition</span>
+  <span class="n">fetch</span>      <span class="n">Allows</span> <span class="n">you</span> <span class="n">to</span> <span class="n">fetch</span> <span class="n">a</span> <span class="n">project</span> <span class="kn">from</span> <span class="nn">GitHub</span>
+  <span class="n">git</span>        <span class="n">Run</span> <span class="n">a</span> <span class="n">git</span> <span class="n">command</span>
+  <span class="n">goto</span>       <span class="n">Goto</span> <span class="n">a</span> <span class="n">project</span><span class="s1">&#39;s directory</span>
+  <span class="n">halt</span>       <span class="n">Halt</span> <span class="n">a</span> <span class="n">box</span><span class="p">,</span> <span class="n">can</span> <span class="n">be</span> <span class="n">started</span> <span class="n">back</span> <span class="n">using</span> <span class="n">up</span>
+  <span class="n">history</span>    <span class="n">Shows</span> <span class="n">provisioning</span> <span class="n">history</span> <span class="k">for</span> <span class="n">a</span> <span class="n">box</span>
+  <span class="n">init</span>       <span class="n">Initialize</span> <span class="n">a</span> <span class="n">new</span> <span class="n">AerisCloud</span> <span class="n">project</span>
+  <span class="n">job</span>        <span class="n">Run</span> <span class="n">a</span> <span class="n">maintenance</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">box</span><span class="o">.</span>
+  <span class="n">make</span>       <span class="n">Run</span> <span class="n">a</span> <span class="n">make</span> <span class="n">command</span>
+  <span class="n">provision</span>  <span class="n">Provision</span> <span class="n">a</span> <span class="n">box</span>
+  <span class="n">ssh</span>        <span class="n">Launch</span> <span class="n">a</span> <span class="n">ssh</span> <span class="n">shell</span> <span class="n">on</span> <span class="n">the</span> <span class="n">box</span>
+  <span class="n">status</span>     <span class="n">Query</span> <span class="n">the</span> <span class="n">status</span> <span class="n">of</span> <span class="n">boxes</span>
+  <span class="n">suspend</span>    <span class="n">Suspend</span> <span class="n">a</span> <span class="n">running</span> <span class="n">box</span><span class="p">,</span> <span class="n">see</span> <span class="n">resume</span>
+  <span class="n">sync</span>       <span class="n">Sync</span> <span class="n">data</span> <span class="n">up</span> <span class="ow">or</span> <span class="n">down</span>
+  <span class="n">up</span>         <span class="n">Starts</span> <span class="n">the</span> <span class="n">given</span> <span class="n">box</span> <span class="ow">and</span> <span class="n">provision</span> <span class="n">it</span>
+  <span class="n">update</span>     <span class="n">Update</span> <span class="n">AerisCloud</span>
+  <span class="n">version</span>    <span class="n">See</span> <span class="n">the</span> <span class="n">aeriscloud</span> <span class="n">version</span> <span class="n">information</span>
+  <span class="n">watch</span>      <span class="n">Sync</span> <span class="n">files</span> <span class="ow">and</span> <span class="n">restart</span> <span class="n">your</span> <span class="n">application</span> <span class="n">upon</span><span class="o">...</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -91,16 +90,16 @@ Commands:
 <div class="section" id="aeris-box">
 <span id="id1"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">box</span></code><a class="headerlink" href="#aeris-box" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris box [OPTIONS] COMMAND [ARGS]...
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">box</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="n">COMMAND</span> <span class="p">[</span><span class="n">ARGS</span><span class="p">]</span><span class="o">...</span>
 
-  Manage base boxes
+  <span class="n">Manage</span> <span class="n">base</span> <span class="n">boxes</span>
 
-Options:
-  -h, --help  Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>  <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 
-Commands:
-  generate  Generate metadata for boxes (sysadmin tool)
-  list      List the available base boxes
+<span class="n">Commands</span><span class="p">:</span>
+  <span class="n">generate</span>  <span class="n">Generate</span> <span class="n">metadata</span> <span class="k">for</span> <span class="n">boxes</span> <span class="p">(</span><span class="n">sysadmin</span> <span class="n">tool</span><span class="p">)</span>
+  <span class="nb">list</span>      <span class="n">List</span> <span class="n">the</span> <span class="n">available</span> <span class="n">base</span> <span class="n">boxes</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -108,14 +107,14 @@ Commands:
 <div class="section" id="aeris-box-generate">
 <span id="id2"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">box</span> <span class="pre">generate</span></code><a class="headerlink" href="#aeris-box-generate" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris box generate [OPTIONS]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">box</span> <span class="n">generate</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span>
 
-  Generate metadata for boxes (sysadmin tool)
+  <span class="n">Generate</span> <span class="n">metadata</span> <span class="k">for</span> <span class="n">boxes</span> <span class="p">(</span><span class="n">sysadmin</span> <span class="n">tool</span><span class="p">)</span>
 
-Options:
-  -j, --json       Output metadata as JSON
-  -p, --path TEXT  Where to save the metadata files
-  --help           Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">j</span><span class="p">,</span> <span class="o">--</span><span class="n">json</span>       <span class="n">Output</span> <span class="n">metadata</span> <span class="k">as</span> <span class="n">JSON</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">path</span> <span class="n">TEXT</span>  <span class="n">Where</span> <span class="n">to</span> <span class="n">save</span> <span class="n">the</span> <span class="n">metadata</span> <span class="n">files</span>
+  <span class="o">--</span><span class="n">help</span>           <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -123,13 +122,13 @@ Options:
 <div class="section" id="aeris-box-list">
 <span id="id3"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">box</span> <span class="pre">list</span></code><a class="headerlink" href="#aeris-box-list" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris box list [OPTIONS]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">box</span> <span class="nb">list</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span>
 
-  List the available base boxes
+  <span class="n">List</span> <span class="n">the</span> <span class="n">available</span> <span class="n">base</span> <span class="n">boxes</span>
 
-Options:
-  -j, --json
-  --help      Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">j</span><span class="p">,</span> <span class="o">--</span><span class="n">json</span>
+  <span class="o">--</span><span class="n">help</span>      <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -137,17 +136,17 @@ Options:
 <div class="section" id="aeris-browse">
 <span id="id4"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">browse</span></code><a class="headerlink" href="#aeris-browse" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris browse [OPTIONS] [ENDPOINT]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">browse</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="p">[</span><span class="n">ENDPOINT</span><span class="p">]</span>
 
-  Open an endpoint in your default browser
+  <span class="n">Open</span> <span class="n">an</span> <span class="n">endpoint</span> <span class="ow">in</span> <span class="n">your</span> <span class="n">default</span> <span class="n">browser</span>
 
-Options:
-  -i, --ip                 Use the machine IP instead of the aeris.cd domain
-  -p, --project [project]  Which project to use, by defaultuse the current
-                           folder.
-  -b, --box [box]          Which box to use, by default uses the first
-                           available.
-  -h, --help               Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">i</span><span class="p">,</span> <span class="o">--</span><span class="n">ip</span>                 <span class="n">Use</span> <span class="n">the</span> <span class="n">machine</span> <span class="n">IP</span> <span class="n">instead</span> <span class="n">of</span> <span class="n">the</span> <span class="n">aeris</span><span class="o">.</span><span class="n">cd</span> <span class="n">domain</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="p">[</span><span class="n">project</span><span class="p">]</span>  <span class="n">Which</span> <span class="n">project</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">defaultuse</span> <span class="n">the</span> <span class="n">current</span>
+                           <span class="n">folder</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="p">[</span><span class="n">box</span><span class="p">]</span>          <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">uses</span> <span class="n">the</span> <span class="n">first</span>
+                           <span class="n">available</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>               <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -155,18 +154,18 @@ Options:
 <div class="section" id="aeris-build">
 <span id="id5"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">build</span></code><a class="headerlink" href="#aeris-build" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris build [OPTIONS] SERVER PLATFORM
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">build</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="n">SERVER</span> <span class="n">PLATFORM</span>
 
-  Build your native application
+  <span class="n">Build</span> <span class="n">your</span> <span class="n">native</span> <span class="n">application</span>
 
-Options:
-  -v, --variable TEXT      Specify the variable you want to change
-  -u, --unity TEXT         Path to your Unity directory
-  -p, --project [project]  Which project to use, by defaultuse the current
-                           folder.
-  -b, --box [box]          Which box to use, by default uses the first
-                           available.
-  -h, --help               Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">v</span><span class="p">,</span> <span class="o">--</span><span class="n">variable</span> <span class="n">TEXT</span>      <span class="n">Specify</span> <span class="n">the</span> <span class="n">variable</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">change</span>
+  <span class="o">-</span><span class="n">u</span><span class="p">,</span> <span class="o">--</span><span class="n">unity</span> <span class="n">TEXT</span>         <span class="n">Path</span> <span class="n">to</span> <span class="n">your</span> <span class="n">Unity</span> <span class="n">directory</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="p">[</span><span class="n">project</span><span class="p">]</span>  <span class="n">Which</span> <span class="n">project</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">defaultuse</span> <span class="n">the</span> <span class="n">current</span>
+                           <span class="n">folder</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="p">[</span><span class="n">box</span><span class="p">]</span>          <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">uses</span> <span class="n">the</span> <span class="n">first</span>
+                           <span class="n">available</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>               <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -174,15 +173,15 @@ Options:
 <div class="section" id="aeris-config">
 <span id="id6"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">config</span></code><a class="headerlink" href="#aeris-config" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris config [OPTIONS] [OPTION] [VALUE]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">config</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="p">[</span><span class="n">OPTION</span><span class="p">]</span> <span class="p">[</span><span class="n">VALUE</span><span class="p">]</span>
 
-  Get and set your AerisCloud options
+  <span class="n">Get</span> <span class="ow">and</span> <span class="nb">set</span> <span class="n">your</span> <span class="n">AerisCloud</span> <span class="n">options</span>
 
-Options:
-  -a, --all    Show all options
-  -u, --unset  Unset an option
-  --raw
-  -h, --help   Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">a</span><span class="p">,</span> <span class="o">--</span><span class="nb">all</span>    <span class="n">Show</span> <span class="nb">all</span> <span class="n">options</span>
+  <span class="o">-</span><span class="n">u</span><span class="p">,</span> <span class="o">--</span><span class="n">unset</span>  <span class="n">Unset</span> <span class="n">an</span> <span class="n">option</span>
+  <span class="o">--</span><span class="n">raw</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>   <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -190,16 +189,16 @@ Options:
 <div class="section" id="aeris-destroy">
 <span id="id7"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">destroy</span></code><a class="headerlink" href="#aeris-destroy" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris destroy [OPTIONS]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">destroy</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span>
 
-  Destroy a box
+  <span class="n">Destroy</span> <span class="n">a</span> <span class="n">box</span>
 
-Options:
-  -p, --project [project]  Which project to use, by defaultuse the current
-                           folder.
-  -b, --box [box]          Which box to use, by default uses the first
-                           available.
-  -h, --help               Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="p">[</span><span class="n">project</span><span class="p">]</span>  <span class="n">Which</span> <span class="n">project</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">defaultuse</span> <span class="n">the</span> <span class="n">current</span>
+                           <span class="n">folder</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="p">[</span><span class="n">box</span><span class="p">]</span>          <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">uses</span> <span class="n">the</span> <span class="n">first</span>
+                           <span class="n">available</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>               <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -207,19 +206,19 @@ Options:
 <div class="section" id="aeris-expose">
 <span id="id8"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">expose</span></code><a class="headerlink" href="#aeris-expose" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris expose [OPTIONS] COMMAND [ARGS]...
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">expose</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="n">COMMAND</span> <span class="p">[</span><span class="n">ARGS</span><span class="p">]</span><span class="o">...</span>
 
-  Manage project exposition
+  <span class="n">Manage</span> <span class="n">project</span> <span class="n">exposition</span>
 
-Options:
-  -h, --help  Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>  <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 
-Commands:
-  announce  Announce all the running services
-  list      List the exposed projects
-  start     Start the expose server
-  status    Check the status of the expose server
-  stop      Stop the expose server
+<span class="n">Commands</span><span class="p">:</span>
+  <span class="n">announce</span>  <span class="n">Announce</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">running</span> <span class="n">services</span>
+  <span class="nb">list</span>      <span class="n">List</span> <span class="n">the</span> <span class="n">exposed</span> <span class="n">projects</span>
+  <span class="n">start</span>     <span class="n">Start</span> <span class="n">the</span> <span class="n">expose</span> <span class="n">server</span>
+  <span class="n">status</span>    <span class="n">Check</span> <span class="n">the</span> <span class="n">status</span> <span class="n">of</span> <span class="n">the</span> <span class="n">expose</span> <span class="n">server</span>
+  <span class="n">stop</span>      <span class="n">Stop</span> <span class="n">the</span> <span class="n">expose</span> <span class="n">server</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -227,12 +226,12 @@ Commands:
 <div class="section" id="aeris-expose-announce">
 <span id="id9"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">expose</span> <span class="pre">announce</span></code><a class="headerlink" href="#aeris-expose-announce" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris expose announce [OPTIONS]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">expose</span> <span class="n">announce</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span>
 
-  Announce all the running services
+  <span class="n">Announce</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">running</span> <span class="n">services</span>
 
-Options:
-  --help  Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">--</span><span class="n">help</span>  <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -240,16 +239,16 @@ Options:
 <div class="section" id="aeris-expose-list">
 <span id="id10"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">expose</span> <span class="pre">list</span></code><a class="headerlink" href="#aeris-expose-list" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris expose list [OPTIONS]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">expose</span> <span class="nb">list</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span>
 
-  List the exposed projects
+  <span class="n">List</span> <span class="n">the</span> <span class="n">exposed</span> <span class="n">projects</span>
 
-Options:
-  -p, --project TEXT
-  -i, --infra TEXT
-  -b, --box TEXT
-  --json
-  --help              Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="n">TEXT</span>
+  <span class="o">-</span><span class="n">i</span><span class="p">,</span> <span class="o">--</span><span class="n">infra</span> <span class="n">TEXT</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="n">TEXT</span>
+  <span class="o">--</span><span class="n">json</span>
+  <span class="o">--</span><span class="n">help</span>              <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -257,12 +256,12 @@ Options:
 <div class="section" id="aeris-expose-start">
 <span id="id11"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">expose</span> <span class="pre">start</span></code><a class="headerlink" href="#aeris-expose-start" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris expose start [OPTIONS]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">expose</span> <span class="n">start</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span>
 
-  Start the expose server
+  <span class="n">Start</span> <span class="n">the</span> <span class="n">expose</span> <span class="n">server</span>
 
-Options:
-  --help  Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">--</span><span class="n">help</span>  <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -270,12 +269,12 @@ Options:
 <div class="section" id="aeris-expose-status">
 <span id="id12"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">expose</span> <span class="pre">status</span></code><a class="headerlink" href="#aeris-expose-status" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris expose status [OPTIONS]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">expose</span> <span class="n">status</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span>
 
-  Check the status of the expose server
+  <span class="n">Check</span> <span class="n">the</span> <span class="n">status</span> <span class="n">of</span> <span class="n">the</span> <span class="n">expose</span> <span class="n">server</span>
 
-Options:
-  --help  Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">--</span><span class="n">help</span>  <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -283,12 +282,12 @@ Options:
 <div class="section" id="aeris-expose-stop">
 <span id="id13"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">expose</span> <span class="pre">stop</span></code><a class="headerlink" href="#aeris-expose-stop" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris expose stop [OPTIONS]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">expose</span> <span class="n">stop</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span>
 
-  Stop the expose server
+  <span class="n">Stop</span> <span class="n">the</span> <span class="n">expose</span> <span class="n">server</span>
 
-Options:
-  --help  Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">--</span><span class="n">help</span>  <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -296,14 +295,14 @@ Options:
 <div class="section" id="aeris-fetch">
 <span id="id14"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">fetch</span></code><a class="headerlink" href="#aeris-fetch" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris fetch [OPTIONS] &lt;project&gt;
+<div><div class="highlight-default"><div class="highlight"><pre><span></span>Usage: aeris fetch [OPTIONS] &lt;project&gt;
 
   Allows you to fetch a project from GitHub
 
 Options:
   --up          Start the box after fetching the project
-  --make &lt;cmd&gt;  Run the given make command after booting up the box(will
-                start it even if up is not set)
+  --make &lt;cmd&gt;  Run the given make command after booting up the box(will start
+                it even if up is not set)
   --box &lt;box&gt;   Set the box to use for up or make
   -h, --help    Show this message and exit.
 
@@ -324,16 +323,16 @@ Options:
 <div class="section" id="aeris-git">
 <span id="id15"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">git</span></code><a class="headerlink" href="#aeris-git" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris git [OPTIONS] [COMMAND]...
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">git</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="p">[</span><span class="n">COMMAND</span><span class="p">]</span><span class="o">...</span>
 
-  Run a git command
+  <span class="n">Run</span> <span class="n">a</span> <span class="n">git</span> <span class="n">command</span>
 
-Options:
-  -p, --project [project]  Which project to use, by defaultuse the current
-                           folder.
-  -b, --box [box]          Which box to use, by default uses the first
-                           available.
-  -h, --help               Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="p">[</span><span class="n">project</span><span class="p">]</span>  <span class="n">Which</span> <span class="n">project</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">defaultuse</span> <span class="n">the</span> <span class="n">current</span>
+                           <span class="n">folder</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="p">[</span><span class="n">box</span><span class="p">]</span>          <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">uses</span> <span class="n">the</span> <span class="n">first</span>
+                           <span class="n">available</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>               <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -341,12 +340,12 @@ Options:
 <div class="section" id="aeris-goto">
 <span id="id16"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">goto</span></code><a class="headerlink" href="#aeris-goto" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris goto [OPTIONS] [PROJECT]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">goto</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="p">[</span><span class="n">PROJECT</span><span class="p">]</span>
 
-  Goto a project&#39;s directory
+  <span class="n">Goto</span> <span class="n">a</span> <span class="n">project</span><span class="s1">&#39;s directory</span>
 
-Options:
-  -h, --help  Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>  <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -354,17 +353,17 @@ Options:
 <div class="section" id="aeris-halt">
 <span id="id17"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">halt</span></code><a class="headerlink" href="#aeris-halt" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris halt [OPTIONS]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">halt</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span>
 
-  Halt a box, can be started back using up
+  <span class="n">Halt</span> <span class="n">a</span> <span class="n">box</span><span class="p">,</span> <span class="n">can</span> <span class="n">be</span> <span class="n">started</span> <span class="n">back</span> <span class="n">using</span> <span class="n">up</span>
 
-Options:
-  -p, --project [project]  Which project to use, by default usethe current
-                           folder.
-  -b, --box [box]          Which box to use, by default uses all the boxes
-                           from the project.
-  -a, --all                Target all boxes from all projects
-  -h, --help               Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="p">[</span><span class="n">project</span><span class="p">]</span>  <span class="n">Which</span> <span class="n">project</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">usethe</span> <span class="n">current</span>
+                           <span class="n">folder</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="p">[</span><span class="n">box</span><span class="p">]</span>          <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">uses</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">boxes</span>
+                           <span class="kn">from</span> <span class="nn">the</span> <span class="n">project</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">a</span><span class="p">,</span> <span class="o">--</span><span class="nb">all</span>                <span class="n">Target</span> <span class="nb">all</span> <span class="n">boxes</span> <span class="kn">from</span> <span class="nn">all</span> <span class="n">projects</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>               <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -372,17 +371,17 @@ Options:
 <div class="section" id="aeris-history">
 <span id="id18"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">history</span></code><a class="headerlink" href="#aeris-history" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris history [OPTIONS]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">history</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span>
 
-  Shows provisioning history for a box
+  <span class="n">Shows</span> <span class="n">provisioning</span> <span class="n">history</span> <span class="k">for</span> <span class="n">a</span> <span class="n">box</span>
 
-Options:
-  -q, --quiet
-  -p, --project [project]  Which project to use, by defaultuse the current
-                           folder.
-  -b, --box [box]          Which box to use, by default uses the first
-                           available.
-  -h, --help               Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">q</span><span class="p">,</span> <span class="o">--</span><span class="n">quiet</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="p">[</span><span class="n">project</span><span class="p">]</span>  <span class="n">Which</span> <span class="n">project</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">defaultuse</span> <span class="n">the</span> <span class="n">current</span>
+                           <span class="n">folder</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="p">[</span><span class="n">box</span><span class="p">]</span>          <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">uses</span> <span class="n">the</span> <span class="n">first</span>
+                           <span class="n">available</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>               <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -390,15 +389,15 @@ Options:
 <div class="section" id="aeris-init">
 <span id="id19"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">init</span></code><a class="headerlink" href="#aeris-init" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris init [OPTIONS] [FOLDER]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">init</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="p">[</span><span class="n">FOLDER</span><span class="p">]</span>
 
-  Initialize a new AerisCloud project
+  <span class="n">Initialize</span> <span class="n">a</span> <span class="n">new</span> <span class="n">AerisCloud</span> <span class="n">project</span>
 
-Options:
-  -u, --up
-  -m, --make &lt;command&gt;
-  -b, --box TEXT        Which box to use for make
-  -h, --help            Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">u</span><span class="p">,</span> <span class="o">--</span><span class="n">up</span>
+  <span class="o">-</span><span class="n">m</span><span class="p">,</span> <span class="o">--</span><span class="n">make</span> <span class="o">&lt;</span><span class="n">command</span><span class="o">&gt;</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="n">TEXT</span>        <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span> <span class="k">for</span> <span class="n">make</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>            <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -406,18 +405,18 @@ Options:
 <div class="section" id="aeris-job">
 <span id="id20"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">job</span></code><a class="headerlink" href="#aeris-job" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris job [OPTIONS] [JOB] [EXTRA]...
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">job</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="p">[</span><span class="n">JOB</span><span class="p">]</span> <span class="p">[</span><span class="n">EXTRA</span><span class="p">]</span><span class="o">...</span>
 
-  Run a maintenance job in a box.
+  <span class="n">Run</span> <span class="n">a</span> <span class="n">maintenance</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">box</span><span class="o">.</span>
 
-  Call without a job to get the job list
+  <span class="n">Call</span> <span class="n">without</span> <span class="n">a</span> <span class="n">job</span> <span class="n">to</span> <span class="n">get</span> <span class="n">the</span> <span class="n">job</span> <span class="nb">list</span>
 
-Options:
-  -p, --project [project]  Which project to use, by defaultuse the current
-                           folder.
-  -b, --box [box]          Which box to use, by default uses the first
-                           available.
-  -h, --help               Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="p">[</span><span class="n">project</span><span class="p">]</span>  <span class="n">Which</span> <span class="n">project</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">defaultuse</span> <span class="n">the</span> <span class="n">current</span>
+                           <span class="n">folder</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="p">[</span><span class="n">box</span><span class="p">]</span>          <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">uses</span> <span class="n">the</span> <span class="n">first</span>
+                           <span class="n">available</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>               <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -425,16 +424,16 @@ Options:
 <div class="section" id="aeris-make">
 <span id="id21"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">make</span></code><a class="headerlink" href="#aeris-make" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris make [OPTIONS] [COMMAND]...
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">make</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="p">[</span><span class="n">COMMAND</span><span class="p">]</span><span class="o">...</span>
 
-  Run a make command
+  <span class="n">Run</span> <span class="n">a</span> <span class="n">make</span> <span class="n">command</span>
 
-Options:
-  -p, --project [project]  Which project to use, by defaultuse the current
-                           folder.
-  -b, --box [box]          Which box to use, by default uses the first
-                           available.
-  -h, --help               Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="p">[</span><span class="n">project</span><span class="p">]</span>  <span class="n">Which</span> <span class="n">project</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">defaultuse</span> <span class="n">the</span> <span class="n">current</span>
+                           <span class="n">folder</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="p">[</span><span class="n">box</span><span class="p">]</span>          <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">uses</span> <span class="n">the</span> <span class="n">first</span>
+                           <span class="n">available</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>               <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -442,16 +441,16 @@ Options:
 <div class="section" id="aeris-provision">
 <span id="id22"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">provision</span></code><a class="headerlink" href="#aeris-provision" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris provision [OPTIONS] [EXTRA]...
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">provision</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="p">[</span><span class="n">EXTRA</span><span class="p">]</span><span class="o">...</span>
 
-  Provision a box
+  <span class="n">Provision</span> <span class="n">a</span> <span class="n">box</span>
 
-Options:
-  -p, --project [project]  Which project to use, by defaultuse the current
-                           folder.
-  -b, --box [box]          Which box to use, by default uses the first
-                           available.
-  -h, --help               Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="p">[</span><span class="n">project</span><span class="p">]</span>  <span class="n">Which</span> <span class="n">project</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">defaultuse</span> <span class="n">the</span> <span class="n">current</span>
+                           <span class="n">folder</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="p">[</span><span class="n">box</span><span class="p">]</span>          <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">uses</span> <span class="n">the</span> <span class="n">first</span>
+                           <span class="n">available</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>               <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -459,17 +458,17 @@ Options:
 <div class="section" id="aeris-ssh">
 <span id="id23"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">ssh</span></code><a class="headerlink" href="#aeris-ssh" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris ssh [OPTIONS] [COMMAND]...
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">ssh</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="p">[</span><span class="n">COMMAND</span><span class="p">]</span><span class="o">...</span>
 
-  Launch a ssh shell on the box
+  <span class="n">Launch</span> <span class="n">a</span> <span class="n">ssh</span> <span class="n">shell</span> <span class="n">on</span> <span class="n">the</span> <span class="n">box</span>
 
-Options:
-  --force                  Connect anyway if project server is not set
-  -p, --project [project]  Which project to use, by defaultuse the current
-                           folder.
-  -b, --box [box]          Which box to use, by default uses the first
-                           available.
-  -h, --help               Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">--</span><span class="n">force</span>                  <span class="n">Connect</span> <span class="n">anyway</span> <span class="k">if</span> <span class="n">project</span> <span class="n">server</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">set</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="p">[</span><span class="n">project</span><span class="p">]</span>  <span class="n">Which</span> <span class="n">project</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">defaultuse</span> <span class="n">the</span> <span class="n">current</span>
+                           <span class="n">folder</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="p">[</span><span class="n">box</span><span class="p">]</span>          <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">uses</span> <span class="n">the</span> <span class="n">first</span>
+                           <span class="n">available</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>               <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -477,18 +476,18 @@ Options:
 <div class="section" id="aeris-status">
 <span id="id24"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">status</span></code><a class="headerlink" href="#aeris-status" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris status [OPTIONS]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">status</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span>
 
-  Query the status of boxes
+  <span class="n">Query</span> <span class="n">the</span> <span class="n">status</span> <span class="n">of</span> <span class="n">boxes</span>
 
-Options:
-  --show-all               Show boxes that are not created in virtualbox
-  -p, --project [project]  Which project to use, by default usethe current
-                           folder.
-  -b, --box [box]          Which box to use, by default uses all the boxes
-                           from the project.
-  -a, --all                Target all boxes from all projects
-  -h, --help               Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">--</span><span class="n">show</span><span class="o">-</span><span class="nb">all</span>               <span class="n">Show</span> <span class="n">boxes</span> <span class="n">that</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">created</span> <span class="ow">in</span> <span class="n">virtualbox</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="p">[</span><span class="n">project</span><span class="p">]</span>  <span class="n">Which</span> <span class="n">project</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">usethe</span> <span class="n">current</span>
+                           <span class="n">folder</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="p">[</span><span class="n">box</span><span class="p">]</span>          <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">uses</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">boxes</span>
+                           <span class="kn">from</span> <span class="nn">the</span> <span class="n">project</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">a</span><span class="p">,</span> <span class="o">--</span><span class="nb">all</span>                <span class="n">Target</span> <span class="nb">all</span> <span class="n">boxes</span> <span class="kn">from</span> <span class="nn">all</span> <span class="n">projects</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>               <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -496,17 +495,17 @@ Options:
 <div class="section" id="aeris-suspend">
 <span id="id25"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">suspend</span></code><a class="headerlink" href="#aeris-suspend" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris suspend [OPTIONS]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">suspend</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span>
 
-  Suspend a running box, see resume
+  <span class="n">Suspend</span> <span class="n">a</span> <span class="n">running</span> <span class="n">box</span><span class="p">,</span> <span class="n">see</span> <span class="n">resume</span>
 
-Options:
-  -p, --project [project]  Which project to use, by default usethe current
-                           folder.
-  -b, --box [box]          Which box to use, by default uses all the boxes
-                           from the project.
-  -a, --all                Target all boxes from all projects
-  -h, --help               Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="p">[</span><span class="n">project</span><span class="p">]</span>  <span class="n">Which</span> <span class="n">project</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">usethe</span> <span class="n">current</span>
+                           <span class="n">folder</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="p">[</span><span class="n">box</span><span class="p">]</span>          <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">uses</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">boxes</span>
+                           <span class="kn">from</span> <span class="nn">the</span> <span class="n">project</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">a</span><span class="p">,</span> <span class="o">--</span><span class="nb">all</span>                <span class="n">Target</span> <span class="nb">all</span> <span class="n">boxes</span> <span class="kn">from</span> <span class="nn">all</span> <span class="n">projects</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>               <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -514,16 +513,16 @@ Options:
 <div class="section" id="aeris-sync">
 <span id="id26"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">sync</span></code><a class="headerlink" href="#aeris-sync" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris sync [OPTIONS] [DIRECTION]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">sync</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="p">[</span><span class="n">DIRECTION</span><span class="p">]</span>
 
-  Sync data up or down
+  <span class="n">Sync</span> <span class="n">data</span> <span class="n">up</span> <span class="ow">or</span> <span class="n">down</span>
 
-Options:
-  -p, --project [project]  Which project to use, by defaultuse the current
-                           folder.
-  -b, --box [box]          Which box to use, by default uses the first
-                           available.
-  -h, --help               Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="p">[</span><span class="n">project</span><span class="p">]</span>  <span class="n">Which</span> <span class="n">project</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">defaultuse</span> <span class="n">the</span> <span class="n">current</span>
+                           <span class="n">folder</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="p">[</span><span class="n">box</span><span class="p">]</span>          <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">uses</span> <span class="n">the</span> <span class="n">first</span>
+                           <span class="n">available</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>               <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -531,17 +530,17 @@ Options:
 <div class="section" id="aeris-up">
 <span id="id27"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">up</span></code><a class="headerlink" href="#aeris-up" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris up [OPTIONS]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">up</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span>
 
-  Starts the given box and provision it
+  <span class="n">Starts</span> <span class="n">the</span> <span class="n">given</span> <span class="n">box</span> <span class="ow">and</span> <span class="n">provision</span> <span class="n">it</span>
 
-Options:
-  --provision-with TEXT
-  -p, --project [project]  Which project to use, by defaultuse the current
-                           folder.
-  -b, --box [box]          Which box to use, by default uses the first
-                           available.
-  -h, --help               Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">--</span><span class="n">provision</span><span class="o">-</span><span class="k">with</span> <span class="n">TEXT</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="p">[</span><span class="n">project</span><span class="p">]</span>  <span class="n">Which</span> <span class="n">project</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">defaultuse</span> <span class="n">the</span> <span class="n">current</span>
+                           <span class="n">folder</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="p">[</span><span class="n">box</span><span class="p">]</span>          <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">uses</span> <span class="n">the</span> <span class="n">first</span>
+                           <span class="n">available</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>               <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -549,13 +548,13 @@ Options:
 <div class="section" id="aeris-update">
 <span id="id28"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">update</span></code><a class="headerlink" href="#aeris-update" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris update [OPTIONS]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">update</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span>
 
-  Update AerisCloud
+  <span class="n">Update</span> <span class="n">AerisCloud</span>
 
-Options:
-  -f, --force  Force update
-  -h, --help   Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">f</span><span class="p">,</span> <span class="o">--</span><span class="n">force</span>  <span class="n">Force</span> <span class="n">update</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>   <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -563,13 +562,13 @@ Options:
 <div class="section" id="aeris-version">
 <span id="id29"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">version</span></code><a class="headerlink" href="#aeris-version" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris version [OPTIONS]
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">version</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span>
 
-  See the aeriscloud version information
+  <span class="n">See</span> <span class="n">the</span> <span class="n">aeriscloud</span> <span class="n">version</span> <span class="n">information</span>
 
-Options:
-  --json
-  -h, --help  Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">--</span><span class="n">json</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>  <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -577,16 +576,16 @@ Options:
 <div class="section" id="aeris-watch">
 <span id="id30"></span><h2><code class="docutils literal"><span class="pre">aeris</span> <span class="pre">watch</span></code><a class="headerlink" href="#aeris-watch" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span></span>Usage: aeris watch [OPTIONS] [COMMAND]...
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">aeris</span> <span class="n">watch</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="p">[</span><span class="n">COMMAND</span><span class="p">]</span><span class="o">...</span>
 
-  Sync files and restart your application upon file changes
+  <span class="n">Sync</span> <span class="n">files</span> <span class="ow">and</span> <span class="n">restart</span> <span class="n">your</span> <span class="n">application</span> <span class="n">upon</span> <span class="n">file</span> <span class="n">changes</span>
 
-Options:
-  -p, --project [project]  Which project to use, by defaultuse the current
-                           folder.
-  -b, --box [box]          Which box to use, by default uses the first
-                           available.
-  -h, --help               Show this message and exit.
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">project</span> <span class="p">[</span><span class="n">project</span><span class="p">]</span>  <span class="n">Which</span> <span class="n">project</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">defaultuse</span> <span class="n">the</span> <span class="n">current</span>
+                           <span class="n">folder</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="o">--</span><span class="n">box</span> <span class="p">[</span><span class="n">box</span><span class="p">]</span>          <span class="n">Which</span> <span class="n">box</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">by</span> <span class="n">default</span> <span class="n">uses</span> <span class="n">the</span> <span class="n">first</span>
+                           <span class="n">available</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>               <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -663,9 +662,6 @@ Options:
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -676,7 +672,7 @@ Options:
       &copy;2016, Wizcorp Inc.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
