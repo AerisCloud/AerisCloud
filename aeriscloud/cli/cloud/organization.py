@@ -8,10 +8,11 @@ import tarfile
 
 from sh import git, curl, ErrorReturnCode, Command as shCommand
 
-from aeriscloud.cli.helpers import Command, info, fatal, success, move_shell_to
+from aeriscloud.cli.helpers import Command, info, fatal, warning, success, \
+    move_shell_to
 from aeriscloud.ansible import get_organization_list, get_env_path, \
     organization_path
-from aeriscloud.config import config, aeriscloud_path
+from aeriscloud.config import has_github_integration, aeriscloud_path
 from aeriscloud.github import Github
 
 
@@ -169,10 +170,6 @@ def init(name, repository):
 
     The following usages are supported:
 
-        cloud organization init <name>
-
-    It will create a new AerisCloud organization locally.
-
         cloud organization init <name> <git repository url>
 
     \b
@@ -201,33 +198,58 @@ git@github.com/<organization>/<project>-aeriscloud-organization.git
 It will create a new AerisCloud organization and set the origin remote to
 git@github.com/<organization>/<customer>-<project>-aeriscloud-organization.git
 """
-    if (not repository and
-            config.has('github', 'enabled') and
-            config.get('github', 'enabled') == 'true' and
-            config.has('github', 'token')):
-        gh = Github()
+    dirname = '-'.join(name.split('/'))
 
-        if '/' in name:
-            split = name.split('/')
-            name = split[0]
-            repo_name = '-'.join(split[1:]) + "-aeriscloud-organization"
-        else:
-            repo_name = "aeriscloud-organization"
-
-        orgs = [org for org in gh.get_organizations()
-                if org.login.lower() == name.lower()]
-        if orgs:
-            repos = [repo.name for repo in orgs[0].iter_repos()
-                     if repo.name.lower() == repo_name.lower()]
-            if repos:
-                repository = "git@github.com:{org}/{repo}.git".format(
-                    org=name,
-                    repo=repo_name
-                )
-
-    dest_path = get_env_path(name)
+    dest_path = get_env_path(dirname)
     if os.path.exists(dest_path):
-        fatal("The organization %s already exists." % name)
+        fatal("The organization %s already exists." % dirname)
+
+    # If remote is not specified
+    if not repository:
+        # If GH integration is enabled
+        if has_github_integration():
+            gh = Github()
+
+            if '/' in name:
+                split = name.split('/')
+                name = split[0]
+                repo_name = '-'.join(split[1:]) + "-aeriscloud-organization"
+            else:
+                repo_name = "aeriscloud-organization"
+
+            # If member of the organization
+            orgs = [org for org in gh.get_organizations()
+                    if org.login.lower() == name.lower()]
+            if orgs:
+                # If repo exists
+                repos = [repo.name for repo in orgs[0].iter_repos()
+                         if repo.name.lower() == repo_name.lower()]
+                if not repos:
+                    # Give instructions to create the repo
+                    info("""The repository {repo} has not been found in the {org} organization.
+You can create a new repo at the following address: https://github.com/new."""
+                         .format(repo=repo_name, org=name))
+                    if not click.confirm("Do you want to continue?",
+                                         default=False):
+                        info("Aborted. Nothing has been done.")
+                        return
+            # If not member of the organization
+            else:
+                warning("We were not able to verify the existence of the "
+                        "repository as you don't belong to the {org} "
+                        "organization.".format(org=name))
+                if not click.confirm("Do you want to continue?",
+                                     default=False):
+                    info("Aborted. Nothing has been done.")
+                    return
+
+            repository = "git@github.com:{org}/{repo}.git".format(
+                org=name,
+                repo=repo_name
+            )
+        else:
+            fatal("You need to specify a repository URL or enable the GitHub "
+                  "integration in AerisCloud.")
 
     archive_url = "https://github.com/AerisCloud/sample-organization/" \
                   "archive/master.tar.gz"
@@ -251,13 +273,15 @@ git@github.com/<organization>/<customer>-<project>-aeriscloud-organization.git
     vgit("init")
 
     move_shell_to(dest_path)
+    info("You have been moved to the organization folder.")
+    success("The %s organization has been created." % dirname)
 
-    success("The %s organization has been created." % name)
+    run_galaxy_install(dirname)
 
-    run_galaxy_install(name)
+    vgit("remote", "add", "origin", repository)
 
-    if repository:
-        vgit("remote", "add", "origin", repository)
+    info("""You can now manage your organization like a standard git repository.
+Edit your files, do some commits and push them!""")
 
 
 @cli.command(cls=Command)
