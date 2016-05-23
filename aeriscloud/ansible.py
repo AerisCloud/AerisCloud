@@ -144,7 +144,7 @@ def get_job_file(job):
 
 def get_inventory_file(inventory):
     inv_file = os.path.join(inventory_path, inventory)
-    if not os.path.isfile(inv_file):
+    if not os.path.exists(inv_file):
         raise IOError('Inventory %s does not exists' % inventory)
     return inv_file
 
