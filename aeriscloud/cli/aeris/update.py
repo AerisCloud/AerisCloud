@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import click
+import os
 import requests
 import semver
 import sys
@@ -12,6 +13,7 @@ from aeriscloud import __version__ as version
 from aeriscloud.cli.helpers import Command, fatal
 from aeriscloud.github import Github
 from aeriscloud.cli.config import config
+from aeriscloud.config import aeriscloud_path
 
 
 @click.command(cls=Command)
@@ -46,6 +48,7 @@ def cli(force):
     tmp.write(r.content)
     tmp.flush()
 
+    os.environ['INSTALL_DIR'] = aeriscloud_path
     call(['bash', tmp.name])
 
     tmp.close()
