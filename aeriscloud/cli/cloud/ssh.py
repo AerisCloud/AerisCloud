@@ -2,7 +2,7 @@ import click
 import socket
 
 from subprocess32 import call, check_output, CalledProcessError
-from ansible.errors import AnsibleYAMLValidationFailed
+from ansible.errors import AnsibleError
 
 from aeriscloud.ansible import ACHost
 from aeriscloud.cli.helpers import Command, fatal
@@ -66,7 +66,7 @@ def cli(timeout, inventory, host, extra):
         fatal(e.message)
     except IOError as e:
         fatal(e.message)
-    except AnsibleYAMLValidationFailed as e:
+    except AnsibleError as e:
         fatal(e.message)
 
     ip = host.ssh_host()
