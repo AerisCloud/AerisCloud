@@ -78,6 +78,19 @@ def update():
     success("All the organizations have been updated.")
 
 
+def update_organization(name, dest_path):
+    click.echo('We will update the %s organization' % name)
+    os.chdir(dest_path)
+    if os.path.exists(os.path.join(dest_path, '.git')):
+        try:
+            vgit('pull')
+        except ErrorReturnCode:
+            fatal("Unable to update the organization %s." % name)
+        success("The %s organization has been updated." % name)
+
+    run_galaxy_install(name)
+
+
 @cli.command(cls=Command)
 @click.argument('name', required=False)
 @click.argument('path', required=False)
@@ -94,17 +107,9 @@ def install(name, path):
               "characters.")
 
     dest_path = get_env_path(name)
-    if os.path.exists(dest_path):
-        click.echo('We will update the %s organization' % name)
-        os.chdir(dest_path)
-        if os.path.exists(os.path.join(dest_path, '.git')):
-            try:
-                vgit('pull')
-            except ErrorReturnCode:
-                fatal("Unable to update the organization %s." % name)
-            success("The %s organization has been updated." % name)
 
-        run_galaxy_install(name)
+    if os.path.exists(dest_path):
+        update_organization(name, dest_path)
         return
 
     if not path:
@@ -112,6 +117,8 @@ def install(name, path):
               "git repository to install a new organization.")
 
     if os.path.exists(path) and os.path.isdir(path):
+        if not os.path.exists(os.path.dirname(dest_path)):
+            os.mkdir(os.path.dirname(dest_path))
         os.symlink(path, dest_path)
     else:
         click.echo('We will clone %s in %s\n' % (path, dest_path))
