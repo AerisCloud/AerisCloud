@@ -52,18 +52,20 @@ class ACHost(object):
 
     def __init__(self, inventory, hostname):
         from ansible.inventory import Inventory as AnsibleInventory
+        from ansible.parsing.dataloader import DataLoader
+        from ansible.vars import VariableManager
 
         inv_file = os.path.join(inventory_path, inventory)
         if not os.path.isfile(inv_file):
             raise IOError('Inventory %s does not exists' % inventory)
         self._name = inventory
         self._hostname = hostname
-        self._inventory = AnsibleInventory(host_list=inv_file)
+        self._inventory = AnsibleInventory(host_list=inv_file, loader=DataLoader(), variable_manager=VariableManager())
         self._host = self._inventory.get_host(hostname)
         if not self._host:
             raise NameError('Host "%s" not found in the inventory %s'
                             % (hostname, inventory))
-        self._vars = self._host.get_variables()
+        self._vars = self._host.get_vars()
 
     def ssh_host(self):
         if 'ansible_ssh_host' in self._vars:
