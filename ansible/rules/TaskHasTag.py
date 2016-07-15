@@ -19,6 +19,9 @@ class TaskHasTag(AnsibleLintRule):
         if file['type'] == 'playbook':
             return False
 
+        if 'action' not in task or 'module' not in task['action']:
+            return False
+
         # If the task include another task or make the playbook fail
         # Don't force to have a tag
         if task['action']['module'] in ['include', 'fail']:

@@ -22,7 +22,7 @@ class ForceShell(AnsibleLintRule):
             return False
 
         # Task should not use the command module
-        if task['action']['module'] == 'command':
+        if 'action' in task and 'module' in task['action'] and task['action']['module'] == 'command':
             return True
 
         return False
