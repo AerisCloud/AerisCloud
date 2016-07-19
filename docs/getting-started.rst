@@ -33,6 +33,17 @@ current folder and generate the auto-completion.
 When updating, just enter the AerisCloud folder, then just pull the latest
 version before running ``make install``.
 
+Install cloud without aeris
+---------------------------
+
+If you want to install only *cloud* to manage remote servers and you
+don't have to manage local developement environment with *aeris*, you can install
+only *cloud* with ``make install-cloud``.
+
+Finally add the following line in you ``~/.bash_profile``::
+
+  source /path/to/aeriscloud/scripts/env.sh
+
 Setting up AerisCloud
 ---------------------
 
