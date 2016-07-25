@@ -81,6 +81,7 @@ def install(name, path):
     if os.path.exists(path) and os.path.isdir(path):
         if not os.path.exists(os.path.dirname(dest_path)):
             os.mkdir(os.path.dirname(dest_path))
+        os.symlink(path, dest_path)
     else:
         click.echo('We will clone %s in %s\n' % (path, dest_path))
         try:
