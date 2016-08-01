@@ -39,6 +39,21 @@ def update():
     success("All the inventories have been updated.")
 
 
+def update_inventory(name, dest_path):
+    if not os.path.exists(os.path.join(dest_path, '.git')):
+        warning("The %s inventory is not a git repository and has not "
+                "been updated." % name)
+        return
+
+    click.echo('We will update the %s inventory' % name)
+    os.chdir(dest_path)
+    try:
+        vgit('pull')
+    except ErrorReturnCode:
+        fatal("Unable to update the inventory %s." % name)
+    success("The %s inventory has been updated." % name)
+
+
 @cli.command(cls=Command)
 @click.argument('name', required=False)
 @click.argument('path', required=False)
@@ -56,18 +71,7 @@ def install(name, path):
 
     dest_path = os.path.join(inventory_path, name)
     if os.path.exists(dest_path):
-        if not os.path.exists(os.path.join(dest_path, '.git')):
-            warning("The %s inventory is not a git repository and has not "
-                    "been updated." % name)
-            return
-
-        click.echo('We will update the %s inventory' % name)
-        os.chdir(dest_path)
-        try:
-            vgit('pull')
-        except ErrorReturnCode:
-            fatal("Unable to update the inventory %s." % name)
-        success("The %s inventory has been updated." % name)
+        update_inventory(name, dest_path)
         return
 
     if not path:
@@ -75,6 +79,8 @@ def install(name, path):
               "git repository to install a new inventory.")
 
     if os.path.exists(path) and os.path.isdir(path):
+        if not os.path.exists(os.path.dirname(dest_path)):
+            os.mkdir(os.path.dirname(dest_path))
         os.symlink(path, dest_path)
     else:
         click.echo('We will clone %s in %s\n' % (path, dest_path))
