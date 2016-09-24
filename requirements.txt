@@ -18,5 +18,4 @@ sh~=1.11
 Sphinx~=1.2
 watchdog~=0.8
 git+https://github.com/christopherobin/python-subprocess32.git#egg=subprocess32
-git+https://github.com/dominis/ansible-shell.git#egg=ansible-shell
 git+https://github.com/willthames/ansible-lint.git@d959090a3e15d978039c81252fc2bfcb2488f8a2#egg=ansible-lint

@@ -238,7 +238,7 @@ def run(inventory, shell_cmd, limit, *args, **kwargs):
 
 def shell(inventory, *args, **kwargs):
     env = ansible_env(os.environ.copy())
-    cmd = ['ansible-shell', '-i', get_inventory_file(inventory)] + list(args)
+    cmd = ['ansible-console', '-i', get_inventory_file(inventory)] + list(args)
 
     if verbosity():
         cmd += ['-' + ('v' * verbosity())]
@@ -246,7 +246,7 @@ def shell(inventory, *args, **kwargs):
     logger.info('running %s', ' '.join(cmd))
     logger.debug('env: %r', env)
 
-    return call(cmd, start_new_session=True, **kwargs)
+    return call(cmd, start_new_session=True, env=env, **kwargs)
 
 
 class Inventory(object):
