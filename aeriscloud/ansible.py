@@ -60,7 +60,11 @@ class ACHost(object):
             raise IOError('Inventory %s does not exists' % inventory)
         self._name = inventory
         self._hostname = hostname
-        self._inventory = AnsibleInventory(host_list=inv_file, loader=DataLoader(), variable_manager=VariableManager())
+        self._inventory = AnsibleInventory(
+            host_list=inv_file,
+            loader=DataLoader(),
+            variable_manager=VariableManager()
+        )
         self._host = self._inventory.get_host(hostname)
         if not self._host:
             raise NameError('Host "%s" not found in the inventory %s'
@@ -74,7 +78,8 @@ class ACHost(object):
         return self._hostname
 
     def ssh_key(self):
-        for idx in ['ansible_private_key_file', 'ansible_ssh_private_key_file']:
+        for idx in ['ansible_private_key_file',
+                    'ansible_ssh_private_key_file']:
             if idx in self._vars:
                 return self._vars[idx]
         return None
