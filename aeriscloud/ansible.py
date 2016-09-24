@@ -164,7 +164,7 @@ def get_inventory_list():
     """
     inventory_list = []
     for dirname, dirnames, filenames \
-            in os.walk(inventory_path):
+            in os.walk(inventory_path, followlinks=True):
         if os.sep + '.git' in dirname:
             continue
 
