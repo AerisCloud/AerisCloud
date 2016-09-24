@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v2.0.1
+------
+
+* fix: Create the necessary directories if missing when installing inventories and organizations.
+* fix: `cloud provision` can now be run against an inventory directory.
+* fix: Bucket named with not a resolvable URL are now supported to store vagrant boxes.
+* fix: Use [ansible-lint](https://github.com/willthames/ansible-lint) 2.7 instead of the latest available version.
+* fix: Set the `INSTALL_DIR` variable when running `aeris update` to correctly update AerisCloud.
+* doc: Add the instructions to install only cloud.
+
+
 v2.0.0
 ------
 
