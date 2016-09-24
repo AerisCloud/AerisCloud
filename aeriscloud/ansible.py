@@ -68,22 +68,21 @@ class ACHost(object):
         self._vars = self._host.get_vars()
 
     def ssh_host(self):
-        if 'ansible_ssh_host' in self._vars:
-            return self._vars['ansible_ssh_host']
+        for idx in ['ansible_host', 'ansible_ssh_host']:
+            if idx in self._vars:
+                return self._vars[idx]
         return self._hostname
 
     def ssh_key(self):
-        if 'ansible_ssh_private_key_file' in self._vars:
-            return self._vars['ansible_ssh_private_key_file']
+        for idx in ['ansible_private_key_file', 'ansible_ssh_private_key_file']:
+            if idx in self._vars:
+                return self._vars[idx]
         return None
 
     def ssh_user(self):
-        if 'ansible_ssh_user' in self._vars:
-            return self._vars['ansible_ssh_user']
-
-        if 'username' in self._vars:
-            return self._vars['username']
-
+        for idx in ['ansible_user', 'ansible_ssh_user', 'username']:
+            if idx in self._vars:
+                return self._vars[idx]
         return None
 
     def variables(self):
