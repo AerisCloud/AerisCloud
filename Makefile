@@ -10,7 +10,7 @@ fi)
 PYTHON_VERSION = $(lastword $(sort $(wildcard $(addsuffix /python2.?,$(subst :, ,$(PATH))))))
 SED_ADVANCED = $(shell if [ "$$(uname -s)" == "Darwin" ]; then echo "sed -E"; else echo "sed -r"; fi)
 
-.PHONY: all build clean complete deps dev install jobs-cache organization-deps docs publish-docs python-deps test
+.PHONY: all build clean complete deps dev install install-cloud jobs-cache organization-deps docs publish-docs python-deps test
 
 install:
 	bash scripts/install.sh
@@ -31,6 +31,8 @@ deps: python-deps jobs-cache
 
 dev:
 	ln -si ../../scripts/pre-commit.sh .git/hooks/pre-commit
+
+install-cloud: deps build
 
 jobs-cache: organization-deps
 	@echo "Creating jobs cache ($$($(WRAPPER) venv/bin/aeris-complete path data_dir)/jobs-cache)"

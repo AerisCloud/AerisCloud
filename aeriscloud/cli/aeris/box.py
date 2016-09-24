@@ -63,7 +63,8 @@ def _generate_meta(metadata, basebox, box, version):
             metadata[basebox]['short_description'] = \
                 'A prepackaged %s box.' % box
 
-    url = 'http://%s/%s-%s.box' % (basebox_bucket(), basebox, version)
+    url = 'http://%s.s3.amazonaws.com/%s-%s.box' % \
+          (basebox_bucket(), basebox, version)
     metadata[basebox]['versions'].append({
         'status': 'active',
         'version': version,
@@ -122,12 +123,15 @@ def generate(output_json, output_path):
 
     click.secho(
         'The metadata files have been saved in the %s directory.\n'
-        'You can upload them to s3 with the following command:\n'
+        'You can upload them to s3 with one of the following commands:\n'
         % output_path,
         fg='green')
 
     click.echo('s3cmd put --recursive %s -m'
                '\"application/json\" s3://%s/'
+               % (output_path, basebox_bucket()))
+    click.echo('aws s3 sync --content-type \"application/json\" '
+               '%s s3://%s/meta/'
                % (output_path, basebox_bucket()))
 
 
