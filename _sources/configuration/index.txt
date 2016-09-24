@@ -42,7 +42,9 @@ If your organization has it's own basebox repository for Vagrant, it should be
 set here so that the :ref:`aeris-init` command might be able to set it in
 your projects. See :ref:`aeris-box` ::
 
-  config.basebox_bucket = https://my-org.tld/baseboxes/meta
+  config.basebox_bucket = organization-boxes
+
+*Note:* This is the AWS S3 bucket name. The required URLs will automatically be generated from that name.
 
 .. _config-raven:
 

@@ -27,11 +27,13 @@
     <link rel="next" title="Rsync Mode" href="../features/rsync.html" />
     <link rel="prev" title="Organization" href="../organization.html" />
    
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">  
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -70,9 +72,10 @@ roles, see <a class="reference internal" href="../commands/cloud.html#cloud-orga
 <p>If your organization has it&#8217;s own basebox repository for Vagrant, it should be
 set here so that the <a class="reference internal" href="../commands/aeris.html#aeris-init"><span class="std std-ref">aeris init</span></a> command might be able to set it in
 your projects. See <a class="reference internal" href="../commands/aeris.html#aeris-box"><span class="std std-ref">aeris box</span></a></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">config</span><span class="o">.</span><span class="n">basebox_bucket</span> <span class="o">=</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">my</span><span class="o">-</span><span class="n">org</span><span class="o">.</span><span class="n">tld</span><span class="o">/</span><span class="n">baseboxes</span><span class="o">/</span><span class="n">meta</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">config</span><span class="o">.</span><span class="n">basebox_bucket</span> <span class="o">=</span> <span class="n">organization</span><span class="o">-</span><span class="n">boxes</span>
 </pre></div>
 </div>
+<p><em>Note:</em> This is the AWS S3 bucket name. The required URLs will automatically be generated from that name.</p>
 </div>
 <div class="section" id="config-raven">
 <span id="id4"></span><h3><code class="docutils literal"><span class="pre">config.raven</span></code><a class="headerlink" href="#config-raven" title="Permalink to this headline">¶</a></h3>
@@ -194,8 +197,8 @@ easy way thanks to direct integration with AerisCloud.</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
@@ -209,8 +212,8 @@ easy way thanks to direct integration with AerisCloud.</p>
       &copy;2016, Wizcorp Inc.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |
       <a href="../_sources/configuration/index.txt"

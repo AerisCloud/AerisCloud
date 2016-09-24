@@ -26,11 +26,13 @@
     <link rel="top" title="AerisCloud 1.4.0 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
    
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">  
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -38,24 +40,24 @@
           <div class="body" role="main">
             
   <h1>Source code for aeriscloud.cli.helpers</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">click</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="kn">from</span> <span class="nn">aeriscloud</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">ac_version</span>
-<span class="kn">from</span> <span class="nn">click._compat</span> <span class="kn">import</span> <span class="n">strip_ansi</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">update_wrapper</span>
-<span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="kn">import</span> <span class="n">HTTPError</span>
+<span class="kn">from</span> <span class="nn">aeriscloud</span> <span class="k">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">ac_version</span>
+<span class="kn">from</span> <span class="nn">click._compat</span> <span class="k">import</span> <span class="n">strip_ansi</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">update_wrapper</span>
+<span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="k">import</span> <span class="n">HTTPError</span>
 
-<span class="kn">from</span> <span class="nn">..box</span> <span class="kn">import</span> <span class="n">BoxList</span>
-<span class="kn">from</span> <span class="nn">..config</span> <span class="kn">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">verbosity</span>
-<span class="kn">from</span> <span class="nn">..expose</span> <span class="kn">import</span> <span class="n">ExposeConnectionError</span><span class="p">,</span> <span class="n">ExposeTimeout</span>
-<span class="kn">from</span> <span class="nn">..log</span> <span class="kn">import</span> <span class="n">set_log_level</span><span class="p">,</span> <span class="n">set_log_file</span><span class="p">,</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">..project</span> <span class="kn">import</span> <span class="n">get</span><span class="p">,</span> <span class="n">from_cwd</span><span class="p">,</span> <span class="nb">all</span> <span class="k">as</span> <span class="n">all_projects</span>
-<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">jinja_env</span><span class="p">,</span> <span class="n">timestamp</span>
-<span class="kn">from</span> <span class="nn">..virtualbox</span> <span class="kn">import</span> <span class="n">list_vms</span>
+<span class="kn">from</span> <span class="nn">..box</span> <span class="k">import</span> <span class="n">BoxList</span>
+<span class="kn">from</span> <span class="nn">..config</span> <span class="k">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">verbosity</span>
+<span class="kn">from</span> <span class="nn">..expose</span> <span class="k">import</span> <span class="n">ExposeConnectionError</span><span class="p">,</span> <span class="n">ExposeTimeout</span>
+<span class="kn">from</span> <span class="nn">..log</span> <span class="k">import</span> <span class="n">set_log_level</span><span class="p">,</span> <span class="n">set_log_file</span><span class="p">,</span> <span class="n">get_logger</span>
+<span class="kn">from</span> <span class="nn">..project</span> <span class="k">import</span> <span class="n">get</span><span class="p">,</span> <span class="n">from_cwd</span><span class="p">,</span> <span class="nb">all</span> <span class="k">as</span> <span class="n">all_projects</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="k">import</span> <span class="n">jinja_env</span><span class="p">,</span> <span class="n">timestamp</span>
+<span class="kn">from</span> <span class="nn">..virtualbox</span> <span class="k">import</span> <span class="n">list_vms</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="s1">&#39;cli.helpers&#39;</span><span class="p">)</span>
 
@@ -65,7 +67,7 @@
     <span class="c1"># This is inherited by the Context to switch between pure POSIX and</span>
     <span class="c1"># argparse-like argument parsing. Setting it to false will push any</span>
     <span class="c1"># unknown flag to the argument located where the flag was declared</span>
-    <span class="n">allow_interspersed_args</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;posix&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">allow_interspersed_args</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;posix&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">cs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">help_option_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;-h&#39;</span><span class="p">,</span> <span class="s1">&#39;--help&#39;</span><span class="p">])</span>
@@ -80,7 +82,7 @@
         <span class="n">params</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">click</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span>
                 <span class="n">param_decls</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">],</span>
-                <span class="n">count</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                <span class="n">count</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Make commands verbose, use &#39;</span>
                      <span class="s1">&#39;multiple time for higher verbosity&#39;</span>
             <span class="p">),</span>
@@ -101,10 +103,10 @@
 <span class="s1">It seems it is the first time you are launching AerisCloud, or new</span>
 <span class="s1">configuration options were added since the last update. We can guide</span>
 <span class="s1">you through a series of questions to setup your configuration.</span>
-<span class="s1">&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">click</span><span class="o">.</span><span class="n">confirm</span><span class="p">(</span><span class="s1">&#39;Run configuration assistant&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+<span class="s1">&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">click</span><span class="o">.</span><span class="n">confirm</span><span class="p">(</span><span class="s1">&#39;Run configuration assistant&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                 <span class="k">return</span>
-            <span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">assistant</span>
+            <span class="kn">from</span> <span class="nn">.config</span> <span class="k">import</span> <span class="n">assistant</span>
 
             <span class="n">assistant</span><span class="p">()</span>
 
@@ -147,8 +149,8 @@
         <span class="k">except</span> <span class="ne">SystemExit</span><span class="p">:</span>
             <span class="k">raise</span>
         <span class="k">except</span> <span class="n">click</span><span class="o">.</span><span class="n">UsageError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="s1">&#39;error: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
-            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">get_help</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">ctx</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="s1">&#39;error: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">get_help</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">ctx</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">exit_code</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">ExposeTimeout</span><span class="p">,</span> <span class="n">ExposeConnectionError</span><span class="p">):</span>
             <span class="n">warning</span><span class="p">(</span><span class="s1">&#39;warning: expose is not available at the moment&#39;</span><span class="p">)</span>
@@ -157,9 +159,9 @@
                          <span class="n">ctx</span><span class="o">.</span><span class="n">invoked_subcommand</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">())</span>
             <span class="n">warning</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">warning: ctrl+c pressed, aborting&#39;</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">log_id</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">log_id</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;raven&#39;</span><span class="p">):</span>
-                <span class="kn">from</span> <span class="nn">raven</span> <span class="kn">import</span> <span class="n">Client</span>
+                <span class="kn">from</span> <span class="nn">raven</span> <span class="k">import</span> <span class="n">Client</span>
                 <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="s1">&#39;requests+&#39;</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;raven&#39;</span><span class="p">))</span>
                 <span class="n">log_id</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_ident</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">captureException</span><span class="p">(</span>
                     <span class="n">tags</span><span class="o">=</span><span class="p">{</span>
@@ -183,7 +185,7 @@
                       <span class="s1">&#39;to exit unexpectedly&#39;</span> <span class="o">%</span> <span class="n">ctx</span><span class="o">.</span><span class="n">info_name</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">start_box</span><span class="p">(</span><span class="n">box</span><span class="p">,</span> <span class="n">provision_with</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">start_box</span><span class="p">(</span><span class="n">box</span><span class="p">,</span> <span class="n">provision_with</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># if the vm is suspended, just resume it</span>
     <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -196,9 +198,9 @@
     <span class="k">if</span> <span class="n">provision</span><span class="p">:</span>
         <span class="n">extra_args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;--provision-with&#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">provision</span><span class="p">)]</span>
 
-    <span class="n">manual_provision</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">manual_provision</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">box</span><span class="o">.</span><span class="n">status</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;saved&#39;</span><span class="p">:</span>
-        <span class="n">manual_provision</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">manual_provision</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;Resuming box </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">box</span><span class="o">.</span><span class="n">name</span><span class="p">())</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">box</span><span class="o">.</span><span class="n">is_running</span><span class="p">():</span>
@@ -223,29 +225,29 @@
     <span class="k">if</span> <span class="n">manual_provision</span><span class="p">:</span>
         <span class="n">box</span><span class="o">.</span><span class="n">vagrant</span><span class="p">(</span><span class="s1">&#39;provision&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">extra_args</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">res</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">res</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">timestamp</span><span class="p">(</span><span class="n">render_cli</span><span class="p">(</span><span class="s1">&#39;provision-success&#39;</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">timestamp</span><span class="p">(</span><span class="n">render_cli</span><span class="p">(</span><span class="s1">&#39;provision-failure&#39;</span><span class="p">))</span>
 
     <span class="c1"># refresh cache</span>
-    <span class="n">list_vms</span><span class="p">(</span><span class="n">clear_cache_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">list_vms</span><span class="p">(</span><span class="n">clear_cache_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">res</span>
 
 
 <span class="c1"># used by standard options, resolve a single box</span>
-<span class="k">def</span> <span class="nf">_single_box_decorator</span><span class="p">(</span><span class="n">start_prompt</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>  <span class="c1"># noqa</span>
+<span class="k">def</span> <span class="nf">_single_box_decorator</span><span class="p">(</span><span class="n">start_prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>  <span class="c1"># noqa</span>
     <span class="k">def</span> <span class="nf">_wrap</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="nd">@click.option</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--project&#39;</span><span class="p">,</span> <span class="s1">&#39;project_name&#39;</span><span class="p">,</span>
+        <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--project&#39;</span><span class="p">,</span> <span class="s1">&#39;project_name&#39;</span><span class="p">,</span>
                       <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;[project]&#39;</span><span class="p">,</span>
                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Which project to use, by default&#39;</span>
                            <span class="s1">&#39;use the current folder.&#39;</span><span class="p">)</span>
-        <span class="nd">@click.option</span><span class="p">(</span><span class="s1">&#39;-b&#39;</span><span class="p">,</span> <span class="s1">&#39;--box&#39;</span><span class="p">,</span> <span class="s1">&#39;box_name&#39;</span><span class="p">,</span>
+        <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-b&#39;</span><span class="p">,</span> <span class="s1">&#39;--box&#39;</span><span class="p">,</span> <span class="s1">&#39;box_name&#39;</span><span class="p">,</span>
                       <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;[box]&#39;</span><span class="p">,</span>
                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Which box to use, by default uses &#39;</span>
                            <span class="s1">&#39;the first available.&#39;</span><span class="p">)</span>
-        <span class="nd">@click.pass_context</span>
+        <span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
         <span class="k">def</span> <span class="nf">_deco</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="n">box_name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">project_name</span><span class="p">:</span>
                 <span class="n">project</span> <span class="o">=</span> <span class="n">from_cwd</span><span class="p">()</span>
@@ -270,7 +272,7 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">box</span><span class="o">.</span><span class="n">is_running</span><span class="p">()</span> <span class="ow">and</span> <span class="n">start_prompt</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">click</span><span class="o">.</span><span class="n">confirm</span><span class="p">(</span><span class="s1">&#39;warning: the box you specified is not &#39;</span>
                                  <span class="s1">&#39;running, do you want to start it?&#39;</span><span class="p">,</span>
-                                 <span class="n">default</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+                                 <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">start_box</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
                     <span class="k">except</span> <span class="n">HTTPError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -306,18 +308,18 @@
 
 <span class="c1"># used by standard options, resolve a multiple boxes and support --all</span>
 <span class="k">def</span> <span class="nf">_multi_box_decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-    <span class="nd">@click.option</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--project&#39;</span><span class="p">,</span> <span class="s1">&#39;project_names&#39;</span><span class="p">,</span>
-                  <span class="n">multiple</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--project&#39;</span><span class="p">,</span> <span class="s1">&#39;project_names&#39;</span><span class="p">,</span>
+                  <span class="n">multiple</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                   <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;[project]&#39;</span><span class="p">,</span>
                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Which project to use, by default use&#39;</span>
                        <span class="s1">&#39;the current folder.&#39;</span><span class="p">)</span>
-    <span class="nd">@click.option</span><span class="p">(</span><span class="s1">&#39;-b&#39;</span><span class="p">,</span> <span class="s1">&#39;--box&#39;</span><span class="p">,</span> <span class="s1">&#39;box_names&#39;</span><span class="p">,</span> <span class="n">multiple</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-b&#39;</span><span class="p">,</span> <span class="s1">&#39;--box&#39;</span><span class="p">,</span> <span class="s1">&#39;box_names&#39;</span><span class="p">,</span> <span class="n">multiple</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                   <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;[box]&#39;</span><span class="p">,</span>
                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Which box to use, by default uses &#39;</span>
                        <span class="s1">&#39;all the boxes from the project.&#39;</span><span class="p">)</span>
-    <span class="nd">@click.option</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--all&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--all&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Target all boxes from all projects&#39;</span><span class="p">)</span>
-    <span class="nd">@click.pass_context</span>
+    <span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
     <span class="k">def</span> <span class="nf">_deco</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">project_names</span><span class="p">,</span> <span class="n">box_names</span><span class="p">,</span> <span class="nb">all</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">boxes</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -352,7 +354,7 @@
 
 
 <span class="c1"># allow a CLI command to support the --project, --box, --all options</span>
-<div class="viewcode-block" id="standard_options"><a class="viewcode-back" href="../../../contributing.html#aeriscloud.cli.helpers.standard_options">[docs]</a><span class="k">def</span> <span class="nf">standard_options</span><span class="p">(</span><span class="n">multiple</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">start_prompt</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+<div class="viewcode-block" id="standard_options"><a class="viewcode-back" href="../../../contributing.html#aeriscloud.cli.helpers.standard_options">[docs]</a><span class="k">def</span> <span class="nf">standard_options</span><span class="p">(</span><span class="n">multiple</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">start_prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add the standard --project and --box options to a command</span>
 <span class="sd">    :param multiple: Whether to find a single or multiple boxes</span>
@@ -367,13 +369,13 @@
 
 <span class="c1"># small cli helpers</span>
 <span class="k">def</span> <span class="nf">get_input</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">prompt_toolkit.contrib.shortcuts</span> <span class="kn">import</span> <span class="n">get_input</span> <span class="k">as</span> <span class="n">pt_get_input</span>
+    <span class="kn">from</span> <span class="nn">prompt_toolkit.contrib.shortcuts</span> <span class="k">import</span> <span class="n">get_input</span> <span class="k">as</span> <span class="n">pt_get_input</span>
 
     <span class="k">return</span> <span class="n">pt_get_input</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">bold</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">click</span><span class="o">.</span><span class="n">style</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">click</span><span class="o">.</span><span class="n">style</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">success</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -385,11 +387,11 @@
 
 
 <span class="k">def</span> <span class="nf">warning</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">error</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">fatal</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -405,7 +407,7 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">cols</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cols</span> <span class="o">=</span> <span class="n">cols</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_header_out</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_header_out</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">str_real_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">strip_ansi</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
@@ -431,9 +433,9 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header_out</span><span class="p">:</span>
             <span class="k">return</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_header_out</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_header_out</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cols</span><span class="p">:</span>
-            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_str</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sizes</span><span class="p">[</span><span class="n">name</span><span class="p">]),</span> <span class="n">nl</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_str</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sizes</span><span class="p">[</span><span class="n">name</span><span class="p">]),</span> <span class="n">nl</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">echo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
@@ -448,7 +450,7 @@
                 <span class="n">row_data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
                 <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
                     <span class="n">row_data</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-                <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_str</span><span class="p">(</span><span class="n">row_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sizes</span><span class="p">[</span><span class="n">name</span><span class="p">]),</span> <span class="n">nl</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_str</span><span class="p">(</span><span class="n">row_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sizes</span><span class="p">[</span><span class="n">name</span><span class="p">]),</span> <span class="n">nl</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
 
 
@@ -481,14 +483,14 @@
 
 <span class="k">class</span> <span class="nc">JinjaColors</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">click</span><span class="o">.</span><span class="n">style</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="n">item</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">click</span><span class="o">.</span><span class="n">style</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="n">item</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">render_cli</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">jinja_env</span><span class="p">(</span><span class="s1">&#39;aeriscloud.cli&#39;</span><span class="p">,</span> <span class="s1">&#39;templates&#39;</span><span class="p">)</span>
     <span class="n">template</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="n">template</span> <span class="o">+</span> <span class="s1">&#39;.j2&#39;</span><span class="p">)</span>
     <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;fg&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">JinjaColors</span><span class="p">()</span>
-    <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;bold&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">style</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;bold&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">style</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;reset&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">style</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
@@ -512,8 +514,8 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
@@ -527,8 +529,8 @@
       &copy;2016, Wizcorp Inc.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
     </div>
 

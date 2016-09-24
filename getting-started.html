@@ -27,11 +27,13 @@
     <link rel="next" title=".aeriscloud.yml" href="configuration/aeriscloud.yml.html" />
     <link rel="prev" title="AerisCloud" href="index.html" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">  
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -68,6 +70,16 @@ the AerisCloud repository where you want it to be installed (something like
 current folder and generate the auto-completion.</p>
 <p>When updating, just enter the AerisCloud folder, then just pull the latest
 version before running <code class="docutils literal"><span class="pre">make</span> <span class="pre">install</span></code>.</p>
+</div>
+<div class="section" id="install-cloud-without-aeris">
+<h2>Install cloud without aeris<a class="headerlink" href="#install-cloud-without-aeris" title="Permalink to this headline">¶</a></h2>
+<p>If you want to install only <em>cloud</em> to manage remote servers and you
+don&#8217;t have to manage local developement environment with <em>aeris</em>, you can install
+only <em>cloud</em> with <code class="docutils literal"><span class="pre">make</span> <span class="pre">install-cloud</span></code>.</p>
+<p>Finally add the following line in you <code class="docutils literal"><span class="pre">~/.bash_profile</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">aeriscloud</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">env</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="setting-up-aeriscloud">
 <h2>Setting up AerisCloud<a class="headerlink" href="#setting-up-aeriscloud" title="Permalink to this headline">¶</a></h2>
@@ -174,6 +186,7 @@ used and how to write proper roles for your organization.</p>
 <li><a class="reference internal" href="#">Getting Started</a><ul>
 <li><a class="reference internal" href="#dependencies">Dependencies</a></li>
 <li><a class="reference internal" href="#manual-installation">Manual Installation</a></li>
+<li><a class="reference internal" href="#install-cloud-without-aeris">Install cloud without aeris</a></li>
 <li><a class="reference internal" href="#setting-up-aeriscloud">Setting up AerisCloud</a></li>
 <li><a class="reference internal" href="#starting-a-new-project">Starting a New Project</a></li>
 <li><a class="reference internal" href="#what-s-next">What&#8217;s Next?</a></li>
@@ -199,8 +212,8 @@ used and how to write proper roles for your organization.</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
@@ -214,8 +227,8 @@ used and how to write proper roles for your organization.</p>
       &copy;2016, Wizcorp Inc.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |
       <a href="_sources/getting-started.txt"
