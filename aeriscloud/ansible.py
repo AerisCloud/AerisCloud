@@ -233,7 +233,7 @@ def run(inventory, shell_cmd, limit, *args, **kwargs):
     logger.info('running %s', ' '.join(map(quote, cmd)))
     logger.debug('env: %r', env)
 
-    return call(cmd, start_new_session=True, **kwargs)
+    return call(cmd, start_new_session=True, env=env, **kwargs)
 
 
 def shell(inventory, *args, **kwargs):
