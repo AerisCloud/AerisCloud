@@ -259,8 +259,12 @@ class Inventory(object):
         :type inventory_path: String
         """
         from ansible.inventory import Inventory as AnsibleInventory
+        from ansible.parsing.dataloader import DataLoader
+        from ansible.vars import VariableManager
 
-        self._inventory = AnsibleInventory(host_list=inventory_path)
+        self._inventory = AnsibleInventory(loader=DataLoader(),
+                                           variable_manager=VariableManager(),
+                                           host_list=inventory_path)
 
     def get_ansible_inventory(self):
         return self._inventory
