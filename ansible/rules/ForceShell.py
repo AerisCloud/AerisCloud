@@ -1,12 +1,12 @@
 import ansiblelint.utils
 from ansiblelint import AnsibleLintRule
 
+
 class ForceShell(AnsibleLintRule):
     id = 'AERISCLOUD0004'
     shortdesc = 'Use shell or raw for any command execution'
     description = 'Use shell or raw for any command execution'
     tags = ['productivity']
-
 
     def matchtask(self, file, task):
         # The meta files don't have any tasks
@@ -22,7 +22,7 @@ class ForceShell(AnsibleLintRule):
             return False
 
         # Task should not use the command module
-        if task['action']['module'] == 'command':
+        if task['action']['__ansible_module__'] == 'command':
             return True
 
         return False

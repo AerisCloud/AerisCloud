@@ -21,7 +21,7 @@ class TaskHasTag(AnsibleLintRule):
 
         # If the task include another task or make the playbook fail
         # Don't force to have a tag
-        if task['action']['module'] in ['include', 'fail']:
+        if task['action']['__ansible_module__'] in ['include', 'fail']:
             return False
 
         role = ansiblelint.utils.rolename(file['path'])
@@ -40,31 +40,31 @@ class TaskHasTag(AnsibleLintRule):
         if role and role not in task['tags']:
             return 'The tag "' + role + '" is not present in this block.'
 
-        if task['action']['module'] == 'apt' and 'pkgs' not in task['tags']:
+        if task['action']['__ansible_module__'] == 'apt' and 'pkgs' not in task['tags']:
             return 'The tag "pkgs" must be present'
 
-        if task['action']['module'] == 'apt_repository' \
+        if task['action']['__ansible_module__'] == 'apt_repository' \
                 and 'repos' not in task['tags']:
             return 'The tag "repos" must be present'
 
-        if task['action']['module'] == 'yum' \
+        if task['action']['__ansible_module__'] == 'yum' \
                 and set(task['tags']).isdisjoint(['repos', 'pkgs']):
             return 'One of the following tags must be present "repos", "pkgs"'
 
-        if task['action']['module'] == 'copy' \
+        if task['action']['__ansible_module__'] == 'copy' \
                 and task['action']['dest'].find('/etc/yum.repos.d') >= 0 \
                 and 'repos' not in task['tags']:
             return 'The tag "repos" must be present'
 
-        if task['action']['module'] in ['copy', 'template'] \
+        if task['action']['__ansible_module__'] in ['copy', 'template'] \
                 and 'files' not in task['tags']:
             return 'The tag "files" must be present'
 
-        if task['action']['module'] == 'sysctl' \
+        if task['action']['__ansible_module__'] == 'sysctl' \
                 and 'sysctl' not in task['tags']:
             return 'The tag "sysctl" must be present'
 
-        if task['action']['module'] == 'aeriscloud_service' \
+        if task['action']['__ansible_module__'] == 'aeriscloud_service' \
                 and 'announce' not in task['tags']:
             return 'The tag "announce" must be present'
 
