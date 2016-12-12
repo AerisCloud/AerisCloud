@@ -14,7 +14,7 @@ prompt-toolkit==0.31
 python-slugify~=1.0
 raven~=5.2.0
 semver~=2.0
-sh~=1.11
+sh==1.11
 Sphinx~=1.2
 watchdog~=0.8
 git+https://github.com/christopherobin/python-subprocess32.git#egg=subprocess32
