@@ -44,7 +44,7 @@ class MultilineMode(AnsibleLintRule):
         if isinstance(task, basestring):
             return False
 
-        if task['action']['module'] != 'shell':
+        if 'action' in task and 'module' in task['action'] and task['action']['module'] != 'shell':
             for option in task['action']:
                 if option.rstrip('\n').find('\n') >= 0:
                     return "Misuse of the literal style"
