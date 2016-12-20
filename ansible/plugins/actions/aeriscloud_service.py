@@ -1,58 +1,63 @@
-import os
-from ansible import utils
-from ansible import errors
-from ansible.runner.return_data import ReturnData
-import base64
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
+
 import jinja2
+import os
+from ansible.plugins.action import ActionBase
+from ansible.utils.hashing import checksum_s
+from ansible.utils.unicode import to_bytes
 
+class ActionModule(ActionBase):
 
-class ActionModule(object):
     TRANSFERS_FILES = True
 
-    def __init__(self, runner):
-        self.runner = runner
-
-    def create_aeriscloud_directory(self, conn, tmp, inject):
-        module_args = ''
-        options = {
+    def create_aeriscloud_directory(self, tmp, task_vars):
+        module_args = {
             'path': '/etc/aeriscloud.d',
             'state': 'directory',
             'mode': 0755,
             'owner': 'root',
             'group': 'root'
         }
+        return self._execute_module(module_name='file',
+                                    module_args=module_args,
+                                    tmp=tmp,
+                                    task_vars=task_vars)
 
-        return self.runner._execute_module(conn, tmp, 'file', module_args,
-                                           inject=inject, complex_args=options,
-                                           persist_files=True)
+    def get_checksum(self, dest, all_vars, try_directory=False, source=None, tmp=None):
+        try:
+            dest_stat = self._execute_remote_stat(dest, all_vars=all_vars, follow=False, tmp=tmp)
 
-    def run(self, conn, tmp, module_name, module_args, inject,
-            complex_args=None, **kwargs):
+            if dest_stat['exists'] and dest_stat['isdir'] and try_directory and source:
+                base = os.path.basename(source)
+                dest = os.path.join(dest, base)
+                dest_stat = self._execute_remote_stat(dest, all_vars=all_vars, follow=False, tmp=tmp)
 
-        if not self.runner.is_playbook:
-            raise errors.AnsibleError("in current versions of ansible, "
-                                      "aeriscloud_service is only usable "
-                                      "in playbooks")
+        except Exception as e:
+            return dict(failed=True, msg=to_bytes(e))
 
-        # load up options
-        options = {}
-        if complex_args:
-            options.update(complex_args)
-        options.update(utils.parse_kv(module_args))
+        return dest_stat['checksum']
 
-        res = self.create_aeriscloud_directory(conn, tmp, inject)
-        if not res.is_successful():
+    def run(self, tmp=None, task_vars=None):
+        ''' handler for template operations '''
+        if task_vars is None:
+            task_vars = dict()
+
+        res = self.create_aeriscloud_directory(tmp, task_vars)
+        if 'failed' in res:
             return res
+
+        result = super(ActionModule, self).run(tmp, task_vars)
+
+        name = self._task.args.get('name', None)
+        services = self._task.args.get('services', None)
 
         data = {
             'services': []
         }
 
-        for service in options['services']:
-            if 'when' in service \
-                    and not utils.check_conditional(service['when'],
-                                                    self.runner.basedir,
-                                                    inject):
+        for service in services:
+            if 'when' in service and not self._task.evaluate_conditional(service['when'], task_vars):
                 continue
             if 'path' in service and 'protocol' not in service:
                 service['protocol'] = 'http'
@@ -68,77 +73,61 @@ class ActionModule(object):
 
         resultant = template.render(data)
 
-        dest = os.path.join('/etc/aeriscloud.d', options['name'])
-        module_args = ''
-        options = {
-            'path': dest,
+        # Expand any user home dir specification
+        dest = self._remote_expand_user(os.path.join('/etc/aeriscloud.d', name))
+        directory_prepended = True
+
+        remote_user = task_vars.get('ansible_ssh_user') or self._play_context.remote_user
+        if not tmp:
+            tmp = self._make_tmp_path(remote_user)
+            self._cleanup_remote_tmp = True
+
+        local_checksum = checksum_s(resultant)
+        remote_checksum = self.get_checksum(dest, task_vars, not directory_prepended, source=dest, tmp=tmp)
+        if isinstance(remote_checksum, dict):
+            # Error from remote_checksum is a dict.  Valid return is a str
+            result.update(remote_checksum)
+            return result
+
+        diff = {}
+        new_module_args = {
             'mode': 0644,
             'owner': 'root',
-            'group': 'root',
-            'state': 'file'
+            'group': 'root'
         }
 
-        local_checksum = utils.checksum_s(resultant)
-        remote_checksum = self.runner._remote_checksum(conn, tmp, dest, inject)
+        if (remote_checksum == '1') or (local_checksum != remote_checksum):
 
-        if remote_checksum in ('0', '2', '3', '4'):
-            # Note: 1 means the file is not present which is fine; template
-            # will create it
-            result = dict(failed=True, msg="failed to checksum remote file."
-                                           " Checksum error code: %s" % remote_checksum)
-            return ReturnData(conn=conn, comm_ok=True, result=result)
-
-        if local_checksum != remote_checksum:
-
-            # template is different from the remote value
-
+            result['changed'] = True
             # if showing diffs, we need to get the remote value
-            dest_contents = ''
+            if self._play_context.diff:
+                diff = self._get_diff_data(dest, resultant, task_vars, source_file=False)
 
-            if self.runner.diff:
-                # using persist_files to keep the temp directory around to avoid needing to grab another
-                dest_result = self.runner._execute_module(conn, tmp, 'slurp',
-                                                          "path=%s" % dest,
-                                                          inject=inject,
-                                                          persist_files=True)
-                if 'content' in dest_result.result:
-                    dest_contents = dest_result.result['content']
-                    if dest_result.result['encoding'] == 'base64':
-                        dest_contents = base64.b64decode(dest_contents)
-                    else:
-                        raise Exception(
-                            "unknown encoding, failed: %s" % dest_result.result)
+            if not self._play_context.check_mode:  # do actual work through copy
+                xfered = self._transfer_data(self._connection._shell.join_path(tmp, 'source'), resultant)
 
-            xfered = self.runner._transfer_str(conn, tmp, 'source', resultant)
+                # fix file permissions when the copy is done as a different user
+                self._fixup_perms(xfered, remote_user)
 
-            # fix file permissions when the copy is done as a different user
-            if self.runner.become and self.runner.become_user != 'root':
-                self.runner._remote_chmod(conn, 'a+r', xfered, tmp)
+                # run the copy module
+                new_module_args.update(
+                    dict(
+                        src=xfered,
+                        dest=dest,
+                        original_basename=os.path.basename(dest),
+                        follow=True,
+                    ),
+                )
+                result.update(self._execute_module(
+                    module_name='copy',
+                    module_args=new_module_args,
+                    task_vars=task_vars,
+                    tmp=tmp,
+                    delete_remote_tmp=False))
 
-            # run the copy module
-            new_module_args = dict(
-                src=xfered,
-                dest=dest,
-                follow=True,
-            )
-            module_args_tmp = utils.merge_module_args(module_args,
-                                                      new_module_args)
+            if result.get('changed', False) and self._play_context.diff:
+                result['diff'] = diff
 
-            if self.runner.noop_on_check(inject):
-                return ReturnData(conn=conn, comm_ok=True,
-                                  result=dict(changed=True),
-                                  diff=dict(before_header=dest,
-                                            after_header='',
-                                            before=dest_contents,
-                                            after=resultant))
-            else:
-                res = self.runner._execute_module(conn, tmp, 'copy',
-                                                  module_args_tmp,
-                                                  inject=inject,
-                                                  complex_args=None)
-                if res.result.get('changed', False):
-                    res.diff = dict(before=dest_contents, after=resultant)
-                return res
         else:
             # when running the file module based on the template data, we do
             # not want the source filename (the name of the template) to be used,
@@ -146,16 +135,21 @@ class ActionModule(object):
             # the module to follow links.  When doing that, we have to set
             # original_basename to the template just in case the dest is
             # a directory.
-            module_args = ''
-            new_module_args = dict(
-                src=None,
-                follow=True,
+            new_module_args.update(
+                dict(
+                    path=dest,
+                    src=None,
+                    original_basename=os.path.basename(dest),
+                    follow=True,
+                ),
             )
-            # be sure to inject the check mode param into the module args and
-            # rely on the file module to report its changed status
-            if self.runner.noop_on_check(inject):
-                new_module_args['CHECKMODE'] = True
-            options.update(new_module_args)
-            return self.runner._execute_module(conn, tmp, 'file', module_args,
-                                               inject=inject,
-                                               complex_args=options)
+            result.update(self._execute_module(
+                module_name='file',
+                module_args=new_module_args,
+                task_vars=task_vars,
+                tmp=tmp,
+                delete_remote_tmp=False))
+
+        self._remove_tmp_path(tmp)
+
+        return result

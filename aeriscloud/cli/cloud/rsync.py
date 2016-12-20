@@ -13,7 +13,7 @@ logger = get_logger('cloud.rsync')
 
 def _update_rsync_uri(inventory, uri):
     if ':' not in uri:
-        return uri, []
+        return uri
 
     hostname, path = uri.split(':')
     try:
@@ -38,8 +38,7 @@ def cli(inventory, src, dest, extra):
     src = _update_rsync_uri(inventory, src)
     dest = _update_rsync_uri(inventory, dest)
 
-    cmd = ['rsync', '-av'] + list(extra) +\
-          [src, dest]
+    cmd = ['rsync', '-av'] + list(extra) + [src, dest]
 
     logger.info('Running %s' % ' '.join(map(quote, cmd)))
 

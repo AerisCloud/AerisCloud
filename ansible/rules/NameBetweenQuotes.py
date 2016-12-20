@@ -7,6 +7,7 @@ from ansiblelint import AnsibleLintRule
 # - sed -E -i '' 's/- name: ([^"].*[^"])$/- name: "\1"/' ansible/roles/*/handlers/*.yml
 #
 
+
 class NameBetweenQuotes(AnsibleLintRule):
     id = 'AERISCLOUD0001'
     shortdesc = 'Names must be between quotes'
@@ -26,6 +27,6 @@ class NameBetweenQuotes(AnsibleLintRule):
         (module, args, kwargs) = ansiblelint.utils.tokenize(line)
         if module == 'name' and \
                 not (args[0].startswith('"') and args[-1].endswith('"')):
-            if file['type'] == 'tasks' and not line.startswith('-'):
+            if file['type'] in ['tasks', 'handlers'] and not line.startswith('-'):
                 return False
             return True

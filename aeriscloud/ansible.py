@@ -52,36 +52,42 @@ class ACHost(object):
 
     def __init__(self, inventory, hostname):
         from ansible.inventory import Inventory as AnsibleInventory
+        from ansible.parsing.dataloader import DataLoader
+        from ansible.vars import VariableManager
 
         inv_file = os.path.join(inventory_path, inventory)
         if not os.path.isfile(inv_file):
             raise IOError('Inventory %s does not exists' % inventory)
         self._name = inventory
         self._hostname = hostname
-        self._inventory = AnsibleInventory(host_list=inv_file)
+        self._inventory = AnsibleInventory(
+            host_list=inv_file,
+            loader=DataLoader(),
+            variable_manager=VariableManager()
+        )
         self._host = self._inventory.get_host(hostname)
         if not self._host:
             raise NameError('Host "%s" not found in the inventory %s'
                             % (hostname, inventory))
-        self._vars = self._host.get_variables()
+        self._vars = self._host.get_vars()
 
     def ssh_host(self):
-        if 'ansible_ssh_host' in self._vars:
-            return self._vars['ansible_ssh_host']
+        for idx in ['ansible_host', 'ansible_ssh_host']:
+            if idx in self._vars:
+                return self._vars[idx]
         return self._hostname
 
     def ssh_key(self):
-        if 'ansible_ssh_private_key_file' in self._vars:
-            return self._vars['ansible_ssh_private_key_file']
+        for idx in ['ansible_private_key_file',
+                    'ansible_ssh_private_key_file']:
+            if idx in self._vars:
+                return self._vars[idx]
         return None
 
     def ssh_user(self):
-        if 'ansible_ssh_user' in self._vars:
-            return self._vars['ansible_ssh_user']
-
-        if 'username' in self._vars:
-            return self._vars['username']
-
+        for idx in ['ansible_user', 'ansible_ssh_user', 'username']:
+            if idx in self._vars:
+                return self._vars[idx]
         return None
 
     def variables(self):
@@ -227,12 +233,12 @@ def run(inventory, shell_cmd, limit, *args, **kwargs):
     logger.info('running %s', ' '.join(map(quote, cmd)))
     logger.debug('env: %r', env)
 
-    return call(cmd, start_new_session=True, **kwargs)
+    return call(cmd, start_new_session=True, env=env, **kwargs)
 
 
 def shell(inventory, *args, **kwargs):
     env = ansible_env(os.environ.copy())
-    cmd = ['ansible-shell', '-i', get_inventory_file(inventory)] + list(args)
+    cmd = ['ansible-console', '-i', get_inventory_file(inventory)] + list(args)
 
     if verbosity():
         cmd += ['-' + ('v' * verbosity())]
@@ -240,7 +246,7 @@ def shell(inventory, *args, **kwargs):
     logger.info('running %s', ' '.join(cmd))
     logger.debug('env: %r', env)
 
-    return call(cmd, start_new_session=True, **kwargs)
+    return call(cmd, start_new_session=True, env=env, **kwargs)
 
 
 class Inventory(object):
@@ -253,8 +259,12 @@ class Inventory(object):
         :type inventory_path: String
         """
         from ansible.inventory import Inventory as AnsibleInventory
+        from ansible.parsing.dataloader import DataLoader
+        from ansible.vars import VariableManager
 
-        self._inventory = AnsibleInventory(host_list=inventory_path)
+        self._inventory = AnsibleInventory(loader=DataLoader(),
+                                           variable_manager=VariableManager(),
+                                           host_list=inventory_path)
 
     def get_ansible_inventory(self):
         return self._inventory

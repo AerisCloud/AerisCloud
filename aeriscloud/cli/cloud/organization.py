@@ -6,6 +6,7 @@ import shutil
 import sys
 import tarfile
 
+from itertools import product
 from sh import git, curl, ErrorReturnCode, Command as shCommand
 
 from aeriscloud.cli.helpers import Command, info, fatal, warning, success, \
@@ -29,8 +30,15 @@ vgit = git.bake(_out=sys.stdout, _out_bufsize=0, _err_to_out=True)
 
 def run_galaxy_install(organization):
     roles_path = os.path.join(get_env_path(organization), 'roles')
-    dependencies_path = os.path.join(roles_path, 'dependencies.txt')
-    if not os.path.exists(dependencies_path):
+    dependencies_paths = [os.path.join(roles_path, '%s.%s' % (filename, ext))
+                          for (filename, ext)
+                          in product(['requirements', 'dependencies'],
+                                     ['yml', 'txt'])]
+    for path in dependencies_paths:
+        if os.path.exists(path):
+            dependencies_path = path
+            break
+    else:
         return
 
     last_mtime = None
