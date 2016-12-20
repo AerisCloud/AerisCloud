@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v2.1.0
+------
+
+* feature: Upgrade to Ansible 2.1.3.
+* feature: `ansible-shell` has been replace by `ansible-console`.
+* feature: Update `ansible-lint`. 
+* cleanup: The `human_log` plugin has been removed.
+* cleanup: The `history` plugin has been removed.
+* fix: Support for `requirements.yml` in addition to `dependencies.txt` to store role dependencies.
+* fix: Fix the `.editorconfig` configuration for YAML files.
+
 v2.0.2
 ------
 
