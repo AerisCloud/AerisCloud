@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v2.0.2
+------
+
+* fix: `cloud inventory list` should list inventory files by following symlinks.
+* fix: Pin `sh` package version.
+
 v2.0.1
 ------
 
