@@ -1,4 +1,5 @@
 import click
+import shlex
 import socket
 
 from subprocess32 import call, check_output, CalledProcessError
@@ -13,8 +14,11 @@ from aeriscloud.utils import quote
 logger = get_logger('cloud.ssh')
 
 
-def _services(ip, timeout):
+def _services(ip, timeout, *extra_args):
     args = ['ssh', ip, '-t']
+
+    if extra_args:
+        args += list(extra_args)
 
     args += ['-o', 'StrictHostKeyChecking no',
              '-o', 'ConnectTimeout %d' % timeout,
@@ -70,9 +74,13 @@ def cli(timeout, inventory, host, extra):
         fatal(e.message)
 
     ip = host.ssh_host()
-
-    services = _services(ip, timeout)
     args = []
+
+    hostvars = host.variables()
+    if 'ansible_ssh_common_args' in hostvars:
+        args += shlex.split(hostvars['ansible_ssh_common_args'])
+
+    services = _services(ip, timeout, *args)
 
     if services:
         click.secho('\nThe following SSH forwarding have automatically '
