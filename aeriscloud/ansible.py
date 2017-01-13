@@ -19,8 +19,8 @@ logger = get_logger('ansible')
 
 def ansible_env(env):
     env['PATH'] = os.pathsep.join([
-        env['PATH'],
-        os.path.join(aeriscloud_path, 'venv/bin')
+        os.path.join(aeriscloud_path, 'venv/bin'),
+        env['PATH']
     ])
 
     # disable buffering for ansible
