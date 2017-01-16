@@ -64,6 +64,10 @@ def cli(timeout, inventory, host, extra):
     """
     summary(inventory)
 
+    user = None
+    if '@' in host:
+        (user, host) = host.split('@', 1)
+
     try:
         host = ACHost(inventory, host)
     except NameError as e:
@@ -79,6 +83,9 @@ def cli(timeout, inventory, host, extra):
     hostvars = host.variables()
     if 'ansible_ssh_common_args' in hostvars:
         args += shlex.split(hostvars['ansible_ssh_common_args'])
+
+    if user:
+        args += ['-o', 'User %s' % user]
 
     services = _services(ip, timeout, *args)
 
