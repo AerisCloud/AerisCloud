@@ -29,18 +29,30 @@ def ansible_env(env):
     env['PYTHONUNBUFFERED'] = '1'
 
     env['ANSIBLE_BASE_PATH'] = ansible_path
-    env['ANSIBLE_ACTION_PLUGINS'] = ':'.join([os.path.join(plugin_path, 'actions')] +
-                                             constants.DEFAULT_ACTION_PLUGIN_PATH)
-    env['ANSIBLE_CALLBACK_PLUGINS'] = ':'.join([os.path.join(plugin_path, 'callbacks')] +
-                                               constants.DEFAULT_CALLBACK_PLUGIN_PATH)
-    env['ANSIBLE_CONNECTION_PLUGINS'] = ':'.join([os.path.join(plugin_path, 'connections')] +
-                                                 constants.DEFAULT_CONNECTION_PLUGIN_PATH)
-    env['ANSIBLE_FILTER_PLUGINS'] = ':'.join([os.path.join(plugin_path, 'filters')] +
-                                             constants.DEFAULT_FILTER_PLUGIN_PATH)
-    env['ANSIBLE_LOOKUP_PLUGINS'] = ':'.join([os.path.join(plugin_path, 'lookups')] +
-                                             constants.DEFAULT_LOOKUP_PLUGIN_PATH)
-    env['ANSIBLE_VARS_PLUGINS'] = ':'.join([os.path.join(plugin_path, 'vars')] +
-                                           constants.DEFAULT_VARS_PLUGIN_PATH)
+    env['ANSIBLE_ACTION_PLUGINS'] = ':'.join(
+        [os.path.join(plugin_path, 'actions')] +
+        constants.DEFAULT_ACTION_PLUGIN_PATH
+    )
+    env['ANSIBLE_CALLBACK_PLUGINS'] = ':'.join(
+        [os.path.join(plugin_path, 'callbacks')] +
+        constants.DEFAULT_CALLBACK_PLUGIN_PATH
+    )
+    env['ANSIBLE_CONNECTION_PLUGINS'] = ':'.join(
+        [os.path.join(plugin_path, 'connections')] +
+        constants.DEFAULT_CONNECTION_PLUGIN_PATH
+    )
+    env['ANSIBLE_FILTER_PLUGINS'] = ':'.join(
+        [os.path.join(plugin_path, 'filters')] +
+        constants.DEFAULT_FILTER_PLUGIN_PATH
+    )
+    env['ANSIBLE_LOOKUP_PLUGINS'] = ':'.join(
+        [os.path.join(plugin_path, 'lookups')] +
+        constants.DEFAULT_LOOKUP_PLUGIN_PATH
+    )
+    env['ANSIBLE_VARS_PLUGINS'] = ':'.join(
+        [os.path.join(plugin_path, 'vars')] +
+        constants.DEFAULT_VARS_PLUGIN_PATH
+    )
     env['ANSIBLE_NOCOWS'] = '1'
     env['ANSIBLE_FORCE_COLOR'] = '1'
     env['DISPLAY_SKIPPED_HOSTS'] = 'false'
