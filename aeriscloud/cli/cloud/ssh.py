@@ -53,6 +53,40 @@ def _ssh(ip, timeout, *args, **kwargs):
     return call(call_args, **kwargs)
 
 
+def _services_args(services, ip):
+    args = []
+
+    click.secho('\nThe following SSH forwarding have automatically '
+                'been made:\n', fg='green', bold=True)
+
+    for service in services:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.bind(('localhost', 0))
+        _, local_port = s.getsockname()
+        s.close()
+
+        args += ['-L', '%s:%s:%s' % (
+            local_port,
+            ip,
+            service['port'])
+                 ]
+
+        click.echo('%s @ ' % click.style(service['name'], fg='cyan'),
+                   nl=False)
+
+        if 'path' in service:
+            click.secho('http://localhost:%s%s' % (
+                local_port,
+                service['path']
+            ), fg='magenta')
+        else:
+            click.secho('localhost:%s' % local_port, fg='magenta')
+
+    click.echo()
+
+    return args
+
+
 @click.command(cls=Command)
 @click.option('--timeout', default=5)
 @click.argument('inventory')
@@ -63,6 +97,10 @@ def cli(timeout, inventory, host, extra):
     Connect to a remote server.
     """
     summary(inventory)
+
+    user = None
+    if '@' in host:
+        (user, host) = host.split('@', 1)
 
     try:
         host = ACHost(inventory, host)
@@ -80,36 +118,13 @@ def cli(timeout, inventory, host, extra):
     if 'ansible_ssh_common_args' in hostvars:
         args += shlex.split(hostvars['ansible_ssh_common_args'])
 
+    if user:
+        args += ['-o', 'User %s' % user]
+
     services = _services(ip, timeout, *args)
 
     if services:
-        click.secho('\nThe following SSH forwarding have automatically '
-                    'been made:\n', fg='green', bold=True)
-
-        for service in services:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.bind(('localhost', 0))
-            _, local_port = s.getsockname()
-            s.close()
-
-            args += ['-L', '%s:%s:%s' % (
-                local_port,
-                ip,
-                service['port'])
-            ]
-
-            click.echo('%s @ ' % click.style(service['name'], fg='cyan'),
-                       nl=False)
-
-            if 'path' in service:
-                click.secho('http://localhost:%s%s' % (
-                    local_port,
-                    service['path']
-                ), fg='magenta')
-            else:
-                click.secho('localhost:%s' % local_port, fg='magenta')
-
-        click.echo()
+        args += _services_args(services, ip)
 
     if extra:
         args += ['--'] + list(extra)
