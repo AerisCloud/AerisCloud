@@ -4,6 +4,8 @@ import os
 
 from subprocess32 import Popen, PIPE, call
 
+from ansible import constants
+
 from .config import aeriscloud_path, verbosity, data_dir
 from .log import get_logger
 from .utils import quote, timestamp
@@ -19,21 +21,38 @@ logger = get_logger('ansible')
 
 def ansible_env(env):
     env['PATH'] = os.pathsep.join([
-        env['PATH'],
-        os.path.join(aeriscloud_path, 'venv/bin')
+        os.path.join(aeriscloud_path, 'venv/bin'),
+        env['PATH']
     ])
 
     # disable buffering for ansible
     env['PYTHONUNBUFFERED'] = '1'
 
     env['ANSIBLE_BASE_PATH'] = ansible_path
-    env['ANSIBLE_ACTION_PLUGINS'] = os.path.join(plugin_path, 'actions')
-    env['ANSIBLE_CALLBACK_PLUGINS'] = os.path.join(plugin_path, 'callbacks')
-    env['ANSIBLE_CONNECTION_PLUGINS'] = os.path.join(plugin_path,
-                                                     'connections')
-    env['ANSIBLE_FILTER_PLUGINS'] = os.path.join(plugin_path, 'filters')
-    env['ANSIBLE_LOOKUP_PLUGINS'] = os.path.join(plugin_path, 'lookups')
-    env['ANSIBLE_VARS_PLUGINS'] = os.path.join(plugin_path, 'vars')
+    env['ANSIBLE_ACTION_PLUGINS'] = ':'.join(
+        [os.path.join(plugin_path, 'actions')] +
+        constants.DEFAULT_ACTION_PLUGIN_PATH
+    )
+    env['ANSIBLE_CALLBACK_PLUGINS'] = ':'.join(
+        [os.path.join(plugin_path, 'callbacks')] +
+        constants.DEFAULT_CALLBACK_PLUGIN_PATH
+    )
+    env['ANSIBLE_CONNECTION_PLUGINS'] = ':'.join(
+        [os.path.join(plugin_path, 'connections')] +
+        constants.DEFAULT_CONNECTION_PLUGIN_PATH
+    )
+    env['ANSIBLE_FILTER_PLUGINS'] = ':'.join(
+        [os.path.join(plugin_path, 'filters')] +
+        constants.DEFAULT_FILTER_PLUGIN_PATH
+    )
+    env['ANSIBLE_LOOKUP_PLUGINS'] = ':'.join(
+        [os.path.join(plugin_path, 'lookups')] +
+        constants.DEFAULT_LOOKUP_PLUGIN_PATH
+    )
+    env['ANSIBLE_VARS_PLUGINS'] = ':'.join(
+        [os.path.join(plugin_path, 'vars')] +
+        constants.DEFAULT_VARS_PLUGIN_PATH
+    )
     env['ANSIBLE_NOCOWS'] = '1'
     env['ANSIBLE_FORCE_COLOR'] = '1'
     env['DISPLAY_SKIPPED_HOSTS'] = 'false'
