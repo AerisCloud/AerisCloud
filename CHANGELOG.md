@@ -1,6 +1,15 @@
 Changelog
 =========
 
+v2.1.1
+------
+
+* feature: Upgrade to Ansible 2.1.4.
+* feature: `cloud ssh` now uses the `ansible_ssh_common_args` variable.
+* feature: Allow to specify the user when using `cloud ssh`.
+* fix: Put the `venv` at beginning of the PATH.
+* fix: Append to the default plugin paths instead of replacing them.
+
 v2.1.0
 ------
 
