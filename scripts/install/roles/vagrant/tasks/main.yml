@@ -45,7 +45,8 @@
     which vagrant 2>&1 >/dev/null
   register: vagrant_installed
 
-- fail: "Vagrant must be installed"
+- fail:
+    msg: "Vagrant must be installed"
   when: vagrant_installed|failed
 
 - name: Retrieve installed plugins
