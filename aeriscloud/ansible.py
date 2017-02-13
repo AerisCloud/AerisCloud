@@ -88,7 +88,8 @@ class ACHost(object):
         if not self._host:
             raise NameError('Host "%s" not found in the inventory %s'
                             % (hostname, inventory))
-        self._vars = self._host.get_vars()
+        self._vars = self._host.get_group_vars().copy()
+        self._vars.update(self._host.get_vars())
 
     def ssh_host(self):
         for idx in ['ansible_host', 'ansible_ssh_host']:

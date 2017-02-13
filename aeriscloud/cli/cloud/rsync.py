@@ -13,7 +13,7 @@ logger = get_logger('cloud.rsync')
 
 def _update_rsync_uri(inventory, uri):
     if ':' not in uri:
-        return uri
+        return uri, None
 
     hostname, path = uri.split(':')
     try:
@@ -21,7 +21,7 @@ def _update_rsync_uri(inventory, uri):
     except NameError as e:
         fatal(e.message)
 
-    return ':'.join([host.ssh_host(), path])
+    return ':'.join([host.ssh_host(), path]), host.variables()
 
 
 @click.command(cls=Command)
@@ -35,10 +35,19 @@ def cli(inventory, src, dest, extra):
     """
     summary(inventory)
 
-    src = _update_rsync_uri(inventory, src)
-    dest = _update_rsync_uri(inventory, dest)
+    src, src_hostvars = _update_rsync_uri(inventory, src)
+    dest, dest_hostvars = _update_rsync_uri(inventory, dest)
 
-    cmd = ['rsync', '-av'] + list(extra) + [src, dest]
+    ssh_args = None
+    if src_hostvars and 'ansible_ssh_common_args' in src_hostvars:
+        ssh_args = src_hostvars['ansible_ssh_common_args']
+    if dest_hostvars and 'ansible_ssh_common_args' in dest_hostvars:
+        ssh_args = dest_hostvars['ansible_ssh_common_args']
+
+    cmd = ['rsync', '-av']
+    if ssh_args:
+        cmd += ['-e', 'ssh %s' % ssh_args]
+    cmd += list(extra) + [src, dest]
 
     logger.info('Running %s' % ' '.join(map(quote, cmd)))
 
