@@ -16,12 +16,21 @@ def _update_rsync_uri(inventory, uri):
         return uri, None
 
     hostname, path = uri.split(':')
+
+    user = None
+    if '@' in hostname:
+        (user, hostname) = hostname.split('@', 1)
+
     try:
         host = ACHost(inventory, hostname)
     except NameError as e:
         fatal(e.message)
 
-    return ':'.join([host.ssh_host(), path]), host.variables()
+    new_uri = '@'.join(filter(None, [
+        user,
+        ':'.join([host.ssh_host(), path])
+    ]))
+    return new_uri, host.variables()
 
 
 @click.command(cls=Command)
