@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v2.2.0
+------
+
+* feature: Upgrade to Ansible 2.2.1.
+
 v2.1.2
 ------
 
