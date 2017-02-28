@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v2.1.2
+------
+
+* feature: `cloud rsync` now uses the `ansible_ssh_common_args` variable.
+* feature: Allow to specify the user when using `cloud rsync`.
+* fix: make the install playbook work with ansible 2.1.
+
 v2.1.1
 ------
 
